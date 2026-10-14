@@ -1,0 +1,83 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Same alphabet as src/codes.js: no 0/O, 1/I/L.
+    function validCode(code) {
+      return code.matches('^[A-HJKMNP-Z2-9]{6,8}$');
+    }
+
+    function inviteFields() {
+      return ['name', 'maxSeats', 'table', 'createdAt'];
+    }
+
+    function validInvite(d) {
+      return d.keys().hasAll(inviteFields())
+        && d.keys().hasOnly(inviteFields())
+        && d.name is string && d.name.size() >= 1 && d.name.size() <= 120
+        && d.maxSeats is int && d.maxSeats >= 1 && d.maxSeats <= 20
+        && d.table is string && d.table.size() <= 20
+        && d.createdAt is timestamp;
+    }
+
+    function rsvpFields() {
+      return ['attending', 'seats', 'phone', 'message', 'submittedAt'];
+    }
+
+    // Shape and seat limit, shared by guests and admins. getAfter lets an admin raise
+    // maxSeats and record a bigger reply in the same batch.
+    function validRsvp(code, d) {
+      let inv = /databases/$(database)/documents/invites/$(code);
+      return existsAfter(inv)
+        && d.keys().hasAll(rsvpFields())
+        && d.keys().hasOnly(rsvpFields())
+        && d.attending is bool
+        && d.seats is int
+        && ((d.attending && d.seats >= 1 && d.seats <= getAfter(inv).data.maxSeats)
+            || (!d.attending && d.seats == 0))
+        && d.phone is string && d.phone.size() <= 20
+        && d.phone.matches('^[0-9+() -]*$')
+        && d.message is string && d.message.size() <= 500
+        && d.submittedAt == request.time;
+    }
+
+    function beforeDeadline() {
+      return request.time < get(/databases/$(database)/documents/config/site).data.deadline;
+    }
+
+    // One doc per invitation. Guests can fetch their own by code; nobody can list them.
+    match /invites/{code} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create, update: if isAdmin() && validCode(code) && validInvite(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Replies are private. Guests can write (not read) until the deadline; admins can also
+    // record replies received by text or phone, after the deadline too.
+    match /rsvps/{code} {
+      allow read: if isAdmin();
+      allow create, update: if validRsvp(code, request.resource.data)
+        && (isAdmin() || beforeDeadline());
+      allow delete: if isAdmin();
+    }
+
+    match /admins/{uid} {
+      // A signed-in user may check whether they are an admin.
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow read, write: if isAdmin();
+    }
+
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin()
+        && (docId != 'site' || request.resource.data.deadline is timestamp);
+    }
+  }
+}
