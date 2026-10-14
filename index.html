@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>%TITLE%</title>
+<meta name="description" content="%DESCRIPTION%">
+<meta property="og:title" content="%TITLE%">
+<meta property="og:description" content="%DESCRIPTION%">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F3F4EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121A16" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+
+<nav aria-label="Sections">
+  <div class="inner">
+    <a href="#top" class="mono" id="monogram"></a>
+    <a class="l" href="#story">Our story</a>
+    <a class="l" href="#details">Details</a>
+    <a class="l" href="#program">Program</a>
+    <a class="l" href="#entourage">Entourage</a>
+    <a class="l" href="#attire">Attire</a>
+    <a class="l" href="#rsvp">RSVP</a>
+    <a class="l" href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<main id="site">
+<header class="hero" id="top">
+  <div class="capiz" id="capiz" aria-hidden="true"></div>
+  <div class="hero-card">
+    <p class="pre" id="hero-pre"></p>
+    <h1 id="hero-names"></h1>
+    <p class="date" id="hero-date"></p>
+    <p class="place" id="hero-place"></p>
+    <div class="count" id="count" role="timer" aria-label="Time until the wedding">
+      <div><b id="cd-d">0</b><small>days</small></div>
+      <div><b id="cd-h">0</b><small>hours</small></div>
+      <div><b id="cd-m">0</b><small>minutes</small></div>
+    </div>
+    <a class="btn" href="#rsvp" id="hero-rsvp"></a>
+  </div>
+</header>
+
+<section class="s story" id="story">
+  <h2>Our story</h2>
+  <div id="story-body"></div>
+</section>
+
+<section class="s" id="details">
+  <h2>When and where</h2>
+  <div class="venues" id="venues"></div>
+</section>
+
+<section class="s" id="program">
+  <h2>Program</h2>
+  <ol class="program" id="program-list"></ol>
+</section>
+
+<section class="s" id="entourage">
+  <h2>Entourage</h2>
+  <div class="ent">
+    <div>
+      <h3>Principal sponsors</h3>
+      <div class="pairs" id="principal"></div>
+    </div>
+    <div>
+      <h3>Secondary sponsors</h3>
+      <div class="roles" id="secondary"></div>
+    </div>
+    <div>
+      <h3>Wedding party</h3>
+      <div class="roles" id="party"></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="attire">
+  <h2>What to wear</h2>
+  <p id="attire-text"></p>
+  <div class="swatches" id="swatches"></div>
+  <p class="muted" id="attire-note"></p>
+  <h3 style="margin-top:32px">Gifts</h3>
+  <p id="gifts"></p>
+</section>
+
+<section class="s" id="rsvp" aria-live="polite">
+  <h2>RSVP</h2>
+
+  <p class="loading" id="rsvp-loading" hidden>Finding your invitation…</p>
+
+  <!-- 1. No code yet -->
+  <div id="rsvp-code" hidden>
+    <p class="muted" id="rsvp-intro"></p>
+    <form class="codeform" id="codeForm" novalidate>
+      <label>Invitation code
+        <input id="f-code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="e.g. 7KQ4MXRP">
+      </label>
+      <button class="btn" type="submit">Find my invitation</button>
+    </form>
+    <p class="err" id="code-err" role="alert"></p>
+  </div>
+
+  <!-- 2. Invitation found -->
+  <div id="rsvp-invite" hidden>
+    <p class="greet" id="greet"></p>
+    <p class="muted" id="greet-sub"></p>
+    <p class="notice" id="prev-reply" hidden></p>
+    <form id="rsvpForm" novalidate>
+      <fieldset style="border:0;padding:0;margin:0">
+        <legend style="margin:0 0 6px;font-size:15px;font-weight:500;padding:0">Will you attend?</legend>
+        <div class="choice">
+          <label><input type="radio" name="att" value="yes"> Joyfully attending</label>
+          <label><input type="radio" name="att" value="no"> Regretfully declining</label>
+        </div>
+      </fieldset>
+      <label id="seats-wrap">Number of seats
+        <select id="f-seats"></select>
+      </label>
+      <label>Mobile number
+        <input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="09XX XXX XXXX">
+      </label>
+      <label>Message for the couple (optional)
+        <textarea id="f-msg" maxlength="500"></textarea>
+      </label>
+      <p class="err" id="f-err" role="alert"></p>
+      <button class="btn" type="submit" id="f-submit">Send RSVP</button>
+    </form>
+    <p style="margin-top:20px"><button class="linkbtn" type="button" id="notMe">Not you? Enter a different code</button></p>
+  </div>
+
+  <!-- 3. Submitted -->
+  <div class="card" id="rsvp-thanks" hidden role="status">
+    <h3>Thank you!</h3>
+    <p id="thanksText"></p>
+    <button class="linkbtn" type="button" id="changeReply">Change my reply</button>
+  </div>
+
+  <!-- 4. Closed -->
+  <div class="card" id="rsvp-closed" hidden>
+    <h3>RSVPs are closed</h3>
+    <p id="closedText" style="margin:0"></p>
+  </div>
+</section>
+
+<section class="s" id="faq">
+  <h2>Questions</h2>
+  <div id="faq-list"></div>
+</section>
+</main>
+
+<footer>
+  <div class="sig" id="sig"></div>
+  <div id="signoff"></div>
+</footer>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
