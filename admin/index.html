@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Guest dashboard · %TITLE%</title>
+<meta name="theme-color" content="#F3F4EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121A16" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/styles.css">
+<link rel="stylesheet" href="/src/admin.css">
+</head>
+<body>
+
+<p class="loading admin-wrap" id="boot">Loading…</p>
+
+<!-- Login -->
+<main class="admin-wrap login" id="login" hidden>
+  <p class="mono-lg" id="login-names"></p>
+  <h2>Guest dashboard</h2>
+  <form id="loginForm" novalidate>
+    <label>Email
+      <input id="l-email" type="email" autocomplete="username" required>
+    </label>
+    <label>Password
+      <input id="l-pass" type="password" autocomplete="current-password" required>
+    </label>
+    <p class="err" id="l-err" role="alert"></p>
+    <button class="btn" type="submit" id="l-submit">Sign in</button>
+  </form>
+  <p class="muted small" style="margin-top:24px"><a href="/">Back to the wedding site</a></p>
+</main>
+
+<!-- Dashboard -->
+<main class="admin-wrap" id="dash" hidden>
+  <div class="dash-head">
+    <h2>Guest dashboard</h2>
+    <div class="who"><span class="muted small" id="who"></span> <button class="linkbtn small" id="signOut">Sign out</button></div>
+  </div>
+  <p class="emu-note" id="emu-note" hidden>Local test mode. You're using the emulator, not the live guest list.</p>
+
+  <div class="stats">
+    <div class="stat"><b id="st-invites">0</b><small>invitations</small></div>
+    <div class="stat"><b id="st-resp">0</b><small>responses</small></div>
+    <div class="stat"><b id="st-seats">0</b><small id="st-seats-of">seats confirmed</small></div>
+    <div class="stat"><b id="st-no">0</b><small>declined</small></div>
+    <div class="stat"><b id="st-pending">0</b><small>pending</small></div>
+    <div class="stat"><b id="st-unseated">0</b><small>attending without a table</small></div>
+  </div>
+
+  <details class="settings">
+    <summary>RSVP deadline: <span id="deadline-label">…</span></summary>
+    <form id="deadlineForm" class="inline-form" novalidate>
+      <label>Guests can reply until (Philippine time)
+        <input type="datetime-local" id="deadline-input" required>
+      </label>
+      <button class="btn small" type="submit">Save deadline</button>
+    </form>
+  </details>
+
+  <div class="tools">
+    <input id="q" type="search" placeholder="Search name, code, or mobile" aria-label="Search guests">
+    <select id="filt" aria-label="Filter by reply">
+      <option value="all">All guests</option>
+      <option value="yes">Attending</option>
+      <option value="no">Declined</option>
+      <option value="pending">Pending</option>
+      <option value="unseated">Attending without a table</option>
+    </select>
+  </div>
+  <div class="tools">
+    <button class="btn small" id="addBtn">Add invitation</button>
+    <button class="btn ghost small" id="importBtn">Import CSV</button>
+    <button class="btn ghost small" id="exportBtn">Export to Excel</button>
+  </div>
+
+  <p class="muted small" id="count-line"></p>
+  <div class="tablewrap">
+    <table class="guests">
+      <thead><tr><th>Guest</th><th>Reply</th><th>Seats</th><th>Table</th><th>Mobile</th><th>Message</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+      <tbody id="rows"><tr><td colspan="7" class="muted">Loading guests…</td></tr></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Add / edit invite -->
+<dialog id="inviteDlg" aria-labelledby="inviteDlgTitle">
+  <form id="inviteForm" method="dialog" novalidate>
+    <h3 id="inviteDlgTitle">Add invitation</h3>
+    <p class="muted small" id="inv-code-line" hidden></p>
+    <label>Name on the invitation
+      <input id="inv-name" maxlength="120" placeholder="e.g. Rico & Lea Tan" required>
+    </label>
+    <div class="row2">
+      <label>Seats reserved
+        <input id="inv-seats" type="number" inputmode="numeric" min="1" max="20" value="1" required>
+      </label>
+      <label>Table
+        <input id="inv-table" maxlength="20" placeholder="Optional">
+      </label>
+    </div>
+    <fieldset id="inv-reply-set" hidden>
+      <legend>Reply</legend>
+      <p class="muted small" style="margin:0 0 10px">Use this when a guest replies by text or call.</p>
+      <label>Status
+        <select id="inv-reply">
+          <option value="pending">Pending</option>
+          <option value="yes">Attending</option>
+          <option value="no">Declined</option>
+        </select>
+      </label>
+      <div class="row2" id="inv-reply-fields">
+        <label>Seats attending
+          <input id="inv-rseats" type="number" inputmode="numeric" min="1" max="20">
+        </label>
+        <label>Mobile
+          <input id="inv-phone" type="tel" maxlength="20">
+        </label>
+      </div>
+      <label>Message
+        <textarea id="inv-msg" maxlength="500"></textarea>
+      </label>
+    </fieldset>
+    <p class="err" id="inv-err" role="alert"></p>
+    <div class="dlg-actions">
+      <button class="btn ghost small" type="button" data-close>Cancel</button>
+      <button class="btn small" type="submit" id="inv-save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- CSV import -->
+<dialog id="importDlg" aria-labelledby="importDlgTitle">
+  <div class="dlg-body">
+    <h3 id="importDlgTitle">Import invitations</h3>
+    <p class="muted small">Use a CSV with two columns: <code>name</code> and <code>maxSeats</code>. A header row is optional. Each row gets its own code.</p>
+    <label>CSV file
+      <input type="file" id="csv-file" accept=".csv,text/csv">
+    </label>
+    <p class="muted small" style="margin:8px 0">Or paste the rows</p>
+    <textarea id="csv-text" placeholder="name,maxSeats&#10;Maria Santos,2&#10;Jun Dela Cruz,1"></textarea>
+    <div id="csv-preview"></div>
+    <p class="err" id="csv-err" role="alert"></p>
+    <div class="dlg-actions">
+      <button class="btn ghost small" type="button" data-close>Cancel</button>
+      <button class="btn small" type="button" id="csv-go" disabled>Import</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module" src="/src/admin.js"></script>
+</body>
+</html>

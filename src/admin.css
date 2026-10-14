@@ -1,0 +1,68 @@
+/* Admin dashboard. Builds on styles.css tokens; table and stats styles come from the prototype. */
+.admin-wrap{max-width:1040px;margin:0 auto;padding:40px 20px 80px}
+.small{font-size:14px}
+.login{max-width:440px;padding-top:12vh}
+.mono-lg{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--gold);margin:0 0 8px}
+.login h2{margin-bottom:28px}
+
+.dash-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;margin-bottom:20px}
+.dash-head h2{margin:0}
+.emu-note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:8px;padding:12px 16px;font-size:14px;margin:0 0 24px;max-width:none}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.stat b{display:block;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1}
+.stat small{color:var(--muted)}
+
+.settings{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px 16px;margin-bottom:20px}
+.settings summary{font-size:15px}
+.inline-form{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-top:14px;max-width:none}
+.inline-form label{flex:1;min-width:220px}
+
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tools input,.tools select{width:auto;flex:1;min-width:160px;padding:10px 12px}
+.tablewrap{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:13px}
+tr:last-child td{border-bottom:0}
+td .code{display:block;font-size:13px;color:var(--muted);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+td.msg{max-width:260px;overflow-wrap:anywhere}
+td input.table-in{width:84px;padding:6px 8px;font-size:14px}
+.tag{display:inline-block;font-size:13px;padding:2px 10px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.tag.yes{color:var(--leaf);border-color:var(--leaf)}
+.tag.no{color:var(--muted)}
+.tag.pending{color:var(--gold);border-color:var(--gold);border-style:dashed}
+.acts{display:flex;gap:6px 14px;flex-wrap:wrap;white-space:nowrap}
+.acts .danger{color:#B4462F}
+
+/* Phones: each guest becomes a card */
+@media (max-width:760px){
+  .tablewrap{border:0;background:none}
+  table.guests thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  table.guests,table.guests tbody,table.guests tr,table.guests td{display:block;width:100%}
+  table.guests tr{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 0;margin-bottom:12px}
+  table.guests td{border:0;padding:6px 16px;display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}
+  table.guests td::before{content:attr(data-label);color:var(--muted);font-size:13px}
+  table.guests td.first{grid-template-columns:1fr;font-weight:500;padding-top:10px}
+  table.guests td.first::before,table.guests td.acts-cell::before{content:none}
+  table.guests td.acts-cell{grid-template-columns:1fr;padding-bottom:12px}
+  table.guests td.empty-cell{grid-template-columns:1fr}
+  table.guests td.msg{max-width:none}
+}
+
+/* Dialogs */
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--bg);color:var(--ink);padding:0;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+dialog::backdrop{background:rgba(10,20,15,.45)}
+dialog form,dialog .dlg-body{padding:24px;display:grid;gap:16px;max-width:none}
+dialog h3{margin:0}
+dialog fieldset{border:1px solid var(--line);border-radius:12px;padding:14px 16px 16px;margin:0;display:grid;gap:14px}
+dialog legend{font-weight:500;font-size:15px;padding:0 6px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dlg-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+#csv-preview{max-height:40vh;overflow:auto}
+#csv-preview table{font-size:14px}
+#csv-preview td,#csv-preview th{padding:6px 10px}
+#csv-preview .bad{color:#B4462F}
+#csv-preview .skip{color:var(--muted)}
+code{font-size:.92em;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:0 4px}
