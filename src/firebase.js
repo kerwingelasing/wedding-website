@@ -24,4 +24,4 @@ export const app = initializeApp(
 
 // Each page creates its own Firestore instance: the guest page uses the much smaller
 // firebase/firestore/lite, the dashboard uses the full SDK for live updates.
-export const FIRESTORE_EMULATOR = ['127.0.0.1', 8080];
+export const FIRESTORE_EMULATOR = ['127.0.0.1', 8085];
