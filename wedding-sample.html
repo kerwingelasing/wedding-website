@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paolo and Bea's Wedding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F4EF; --surface:#FFFFFF; --ink:#1E3B30; --muted:#5C6B62; --line:#D5D9CF;
+  --gold:#9C7A43; --leaf:#4F6F5B; --capiz:rgba(255,255,255,.55); --capiz-line:rgba(30,59,48,.10);
+  --serif:"Bodoni Moda", "Didot", Georgia, serif;
+  --sans:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A16; --surface:#1A241F; --ink:#E8ECE6; --muted:#A3B0A7; --line:#2E3B34;
+    --gold:#CDAA6E; --leaf:#8FB09A; --capiz:rgba(255,255,255,.04); --capiz-line:rgba(232,236,230,.08);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A16; --surface:#1A241F; --ink:#E8ECE6; --muted:#A3B0A7; --line:#2E3B34;
+  --gold:#CDAA6E; --leaf:#8FB09A; --capiz:rgba(255,255,255,.04); --capiz-line:rgba(232,236,230,.08);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+
+/* Nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:12px 20px;overflow-x:auto;scrollbar-width:none}
+nav .inner::-webkit-scrollbar{display:none}
+nav .mono{font-family:var(--serif);font-style:italic;font-size:20px;white-space:nowrap;margin-right:auto;text-decoration:none}
+nav a.l{font-size:14px;color:var(--muted);text-decoration:none;white-space:nowrap}
+nav a.l:hover{color:var(--ink)}
+
+/* Hero with capiz window lattice */
+.hero{position:relative;min-height:88vh;display:grid;place-items:center;overflow:hidden;padding:48px 20px}
+.capiz{position:absolute;inset:-2px;display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));grid-auto-rows:56px;gap:6px;padding:6px;background:var(--capiz-line)}
+.capiz span{background:var(--capiz);border-radius:2px;opacity:0;animation:glow .9s ease forwards}
+@keyframes glow{to{opacity:1}}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,var(--bg) 30%,color-mix(in srgb,var(--bg) 30%,transparent) 75%);pointer-events:none}
+.hero-card{position:relative;z-index:1;text-align:center;max-width:620px}
+.hero .pre{color:var(--muted);font-size:16px;margin:0 0 12px}
+.hero h1{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(58px,14vw,128px);line-height:.95;margin:0;letter-spacing:-.01em}
+.hero h1 .amp{display:block;font-size:.45em;color:var(--gold);margin:6px 0}
+.hero .date{font-family:var(--serif);font-size:clamp(20px,4vw,26px);margin:24px 0 4px}
+.hero .place{color:var(--muted);margin:0}
+.count{display:flex;justify-content:center;gap:clamp(14px,4vw,32px);margin:32px 0 28px}
+.count div{min-width:58px}
+.count b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(30px,7vw,44px);line-height:1}
+.count small{color:var(--muted);font-size:13px}
+.btn{display:inline-block;font:inherit;font-weight:500;font-size:15px;padding:13px 26px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+
+/* Sections */
+section.s{max-width:760px;margin:0 auto;padding:80px 20px;border-bottom:1px solid var(--line)}
+section.s:last-of-type{border-bottom:0}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,6vw,46px);line-height:1.1;margin:0 0 24px}
+h3{font-family:var(--serif);font-weight:500;font-size:22px;margin:0 0 6px}
+p{margin:0 0 16px;max-width:62ch}
+.muted{color:var(--muted)}
+
+.story p{font-family:var(--serif);font-size:20px;line-height:1.7}
+
+.venues{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.venue{border-top:2px solid var(--gold);padding-top:18px}
+.venue .time{font-weight:600}
+.venue a{font-size:15px;color:var(--leaf)}
+
+.program{list-style:none;padding:0;margin:0}
+.program li{display:grid;grid-template-columns:96px 1fr;gap:16px;padding:14px 0;border-bottom:1px dashed var(--line)}
+.program li:last-child{border-bottom:0}
+.program time{font-family:var(--serif);color:var(--gold);font-size:18px}
+
+.ent{display:grid;gap:36px}
+.ent h3{margin-bottom:12px}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:16px}
+.pairs span:nth-child(odd){text-align:right}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.roles div small{display:block;color:var(--muted);font-size:14px}
+
+.swatches{display:flex;gap:14px;margin:20px 0 24px;flex-wrap:wrap}
+.sw{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.sw i{width:56px;height:56px;border-radius:50%;border:1px solid var(--line)}
+
+/* RSVP */
+form{display:grid;gap:18px;max-width:520px}
+label{display:grid;gap:6px;font-size:15px;font-weight:500}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;width:100%}
+textarea{min-height:90px;resize:vertical}
+.choice{display:flex;gap:10px;flex-wrap:wrap}
+.choice label{flex:1;min-width:140px;display:flex;align-items:center;gap:10px;font-weight:400;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface);cursor:pointer}
+.choice input{width:auto;accent-color:var(--leaf)}
+.err{color:#B4462F;font-size:14px;min-height:1em;margin:0}
+.thanks{display:none;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:24px}
+.thanks.show{display:block}
+
+details{border-bottom:1px solid var(--line);padding:16px 0}
+summary{cursor:pointer;font-weight:500;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";color:var(--gold);font-size:20px;line-height:1}
+details[open] summary::after{content:"−"}
+details p{margin:10px 0 0}
+
+footer{text-align:center;padding:56px 20px 64px;color:var(--muted);font-size:14px}
+footer .sig{font-family:var(--serif);font-style:italic;font-size:30px;color:var(--ink);margin-bottom:8px}
+.adminlink{background:none;border:0;font:inherit;color:var(--muted);text-decoration:underline;cursor:pointer;margin-top:16px}
+
+/* Admin */
+#admin{display:none;max-width:1040px;margin:0 auto;padding:40px 20px 80px}
+#admin.show{display:block}
+.demo-note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:8px;padding:12px 16px;font-size:14px;margin-bottom:24px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.stat b{display:block;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1}
+.stat small{color:var(--muted)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.tools input,.tools select{width:auto;flex:1;min-width:160px;padding:10px 12px}
+.tools .btn{padding:10px 18px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:13px}
+tr:last-child td{border-bottom:0}
+td select{padding:6px 8px;font-size:14px;width:auto}
+.tag{display:inline-block;font-size:13px;padding:2px 10px;border-radius:999px;border:1px solid var(--line)}
+.tag.yes{color:var(--leaf);border-color:var(--leaf)}
+.tag.no{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:20;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .capiz span{animation:none;opacity:1}
+}
+@media (max-width:520px){
+  .program li{grid-template-columns:76px 1fr}
+  .pairs{font-size:15px;gap:6px 14px}
+}
+</style>
+</head>
+<body>
+
+<nav aria-label="Sections">
+  <div class="inner">
+    <a href="#top" class="mono">P &amp; B</a>
+    <a class="l" href="#story">Our story</a>
+    <a class="l" href="#details">Details</a>
+    <a class="l" href="#program">Program</a>
+    <a class="l" href="#entourage">Entourage</a>
+    <a class="l" href="#attire">Attire</a>
+    <a class="l" href="#rsvp">RSVP</a>
+    <a class="l" href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<div id="site">
+<header class="hero" id="top">
+  <div class="capiz" id="capiz" aria-hidden="true"></div>
+  <div class="hero-card">
+    <p class="pre">Together with our families, we invite you to celebrate the wedding of</p>
+    <h1>Paolo<span class="amp">&amp;</span>Bea</h1>
+    <p class="date">Saturday, February 13, 2027</p>
+    <p class="place">Tagaytay City, Cavite</p>
+    <div class="count" id="count" aria-live="polite">
+      <div><b id="cd-d">0</b><small>days</small></div>
+      <div><b id="cd-h">0</b><small>hours</small></div>
+      <div><b id="cd-m">0</b><small>minutes</small></div>
+    </div>
+    <a class="btn" href="#rsvp">RSVP by January 10</a>
+  </div>
+</header>
+
+<section class="s story" id="story">
+  <h2>Our story</h2>
+  <p>We met in 2019 at a friend's despedida in Quezon City, both of us stuck by the door because the sala was too full. Paolo offered Bea the last piece of leche flan. She still says that's when she knew.</p>
+  <p>Six years, two cities, and one very nervous proposal on a ferry to Batangas later, we're getting married. We'd love for you to be there.</p>
+</section>
+
+<section class="s" id="details">
+  <h2>When and where</h2>
+  <div class="venues">
+    <div class="venue">
+      <h3>Holy Mass</h3>
+      <p class="time">3:00 in the afternoon</p>
+      <p>San Isidro Labrador Parish<br>Aguinaldo Highway, Tagaytay City</p>
+      <a href="#details">Open in Google Maps</a>
+    </div>
+    <div class="venue">
+      <h3>Reception</h3>
+      <p class="time">6:00 in the evening</p>
+      <p>Casa Verde Gardens<br>Tagaytay–Nasugbu Road, Tagaytay City</p>
+      <a href="#details">Open in Google Maps</a>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="program">
+  <h2>Program</h2>
+  <ol class="program">
+    <li><time>2:30 PM</time><span>Guests arrive at the church</span></li>
+    <li><time>3:00 PM</time><span>Holy Mass and wedding ceremony</span></li>
+    <li><time>4:30 PM</time><span>Photos with family and the entourage</span></li>
+    <li><time>6:00 PM</time><span>Cocktails at Casa Verde Gardens</span></li>
+    <li><time>7:00 PM</time><span>Dinner, toasts, and the money dance</span></li>
+    <li><time>9:00 PM</time><span>Dancing until the coffee runs out</span></li>
+  </ol>
+</section>
+
+<section class="s" id="entourage">
+  <h2>Entourage</h2>
+  <div class="ent">
+    <div>
+      <h3>Principal sponsors</h3>
+      <div class="pairs">
+        <span>Mr. Ramon Villanueva</span><span>Mrs. Teresita Villanueva</span>
+        <span>Mr. Eduardo Santos</span><span>Mrs. Liza Santos</span>
+        <span>Atty. Jose Mercado</span><span>Dr. Carmela Reyes</span>
+        <span>Engr. Antonio Cruz</span><span>Mrs. Gloria Dizon</span>
+      </div>
+    </div>
+    <div>
+      <h3>Secondary sponsors</h3>
+      <div class="roles">
+        <div><small>Candle</small>Miguel Ramos &amp; Trisha Lim</div>
+        <div><small>Veil</small>Carlo Bautista &amp; Jenny Ocampo</div>
+        <div><small>Cord</small>Nico Valdez &amp; Pia Fernandez</div>
+      </div>
+    </div>
+    <div>
+      <h3>Wedding party</h3>
+      <div class="roles">
+        <div><small>Best man</small>Jerome Garcia</div>
+        <div><small>Maid of honor</small>Kristine Aquino</div>
+        <div><small>Ring bearer</small>Lucas Garcia</div>
+        <div><small>Coin bearer</small>Ethan Reyes</div>
+        <div><small>Bible bearer</small>Gabriel Cruz</div>
+        <div><small>Flower girls</small>Sofia Lim &amp; Ella Ramos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="attire">
+  <h2>What to wear</h2>
+  <p>Formal garden attire in our motif colors. Ladies in long or midi dresses, gentlemen in barong or a long-sleeved polo. The reception is on grass, so block heels will thank you later.</p>
+  <div class="swatches">
+    <div class="sw"><i style="background:#8FA88F"></i>Sage</div>
+    <div class="sw"><i style="background:#4F6F5B"></i>Fern</div>
+    <div class="sw"><i style="background:#E6D8BD"></i>Champagne</div>
+    <div class="sw"><i style="background:#F4F1E6"></i>Ivory</div>
+  </div>
+  <p class="muted">Please leave white for the bride.</p>
+  <h3 style="margin-top:32px">Gifts</h3>
+  <p>Your presence is the best gift. If you'd like to give something, a monetary gift will help us start our home together.</p>
+</section>
+
+<section class="s" id="rsvp">
+  <h2>RSVP</h2>
+  <p class="muted">Please reply by January 10, 2027. We've saved a number of seats for you on your invitation.</p>
+  <form id="rsvpForm" novalidate>
+    <label>Full name
+      <input id="f-name" autocomplete="name" placeholder="As written on your invitation">
+    </label>
+    <div>
+      <p style="margin:0 0 6px;font-size:15px;font-weight:500">Will you attend?</p>
+      <div class="choice">
+        <label><input type="radio" name="att" value="yes"> Joyfully attending</label>
+        <label><input type="radio" name="att" value="no"> Regretfully declining</label>
+      </div>
+    </div>
+    <label>Number of seats
+      <select id="f-seats">
+        <option value="1">1 seat</option>
+        <option value="2">2 seats</option>
+      </select>
+    </label>
+    <label>Mobile number
+      <input id="f-phone" inputmode="tel" placeholder="09XX XXX XXXX">
+    </label>
+    <label>Message for the couple (optional)
+      <textarea id="f-msg"></textarea>
+    </label>
+    <p class="err" id="f-err" role="alert"></p>
+    <button class="btn" type="submit">Send RSVP</button>
+  </form>
+  <div class="thanks" id="thanks" role="status">
+    <h3>Thank you!</h3>
+    <p id="thanksText" style="margin:0"></p>
+  </div>
+</section>
+
+<section class="s" id="faq">
+  <h2>Questions</h2>
+  <details><summary>Can I bring a plus-one?</summary><p>We've planned seats carefully, so we can only accommodate the guests named on your invitation.</p></details>
+  <details><summary>Are kids welcome?</summary><p>We love your little ones, but the reception is adults-only, except for children in the entourage.</p></details>
+  <details><summary>Is there parking?</summary><p>Yes, both the church and Casa Verde Gardens have free parking. Shuttle service from the church to the reception is available.</p></details>
+  <details><summary>Can we take photos during the Mass?</summary><p>Please keep phones away during the ceremony. Our photographers will share the photos with everyone after the wedding.</p></details>
+</section>
+
+<footer>
+  <div class="sig">Paolo &amp; Bea</div>
+  <div>See you in Tagaytay</div>
+  <button class="adminlink" id="openAdmin">Open admin dashboard (demo)</button>
+</footer>
+</div>
+
+<div id="admin" aria-label="Admin dashboard">
+  <h2>Guest dashboard</h2>
+  <div class="demo-note">This is a demo of the couple's admin view. In the real system it sits behind a login, and RSVPs are saved to a database instead of this browser.</div>
+  <div class="stats">
+    <div class="stat"><b id="st-resp">0</b><small>responses</small></div>
+    <div class="stat"><b id="st-seats">0</b><small>seats confirmed</small></div>
+    <div class="stat"><b id="st-no">0</b><small>declined</small></div>
+    <div class="stat"><b id="st-unseated">0</b><small>attending without a table</small></div>
+  </div>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Search guests" aria-label="Search guests">
+    <select id="filt" aria-label="Filter by reply">
+      <option value="all">All replies</option>
+      <option value="yes">Attending</option>
+      <option value="no">Declined</option>
+    </select>
+    <button class="btn ghost" id="copyBtn">Copy for Excel</button>
+    <button class="btn" id="closeAdmin">Back to site</button>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Guest</th><th>Reply</th><th>Seats</th><th>Table</th><th>Mobile</th><th>Message</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  // Capiz lattice
+  var cap=document.getElementById('capiz'), n=180, html='';
+  for(var i=0;i<n;i++){html+='<span style="animation-delay:'+(Math.random()*900|0)+'ms"></span>';}
+  cap.innerHTML=html;
+
+  // Countdown
+  var target=new Date('2027-02-13T15:00:00+08:00').getTime();
+  function tick(){
+    var d=Math.max(0,target-Date.now());
+    document.getElementById('cd-d').textContent=Math.floor(d/864e5);
+    document.getElementById('cd-h').textContent=Math.floor(d/36e5)%24;
+    document.getElementById('cd-m').textContent=Math.floor(d/6e4)%60;
+  }
+  tick(); setInterval(tick,30000);
+
+  // Data
+  var KEY='pb-wedding-demo-rsvps';
+  var seed=[
+    {name:'Maria Santos',att:'yes',seats:2,table:'3',phone:'0917 555 0142',msg:'So happy for you both!'},
+    {name:'Jun Dela Cruz',att:'yes',seats:1,table:'',phone:'0918 555 0199',msg:''},
+    {name:'Angela Reyes',att:'no',seats:1,table:'',phone:'0927 555 0110',msg:"Sorry I'll be abroad. Congrats!"},
+    {name:'Rico & Lea Tan',att:'yes',seats:2,table:'5',phone:'0995 555 0183',msg:'See you in Tagaytay!'},
+    {name:'Tita Baby Villanueva',att:'yes',seats:2,table:'1',phone:'0920 555 0127',msg:'God bless your marriage.'},
+    {name:'Mark Gonzales',att:'yes',seats:1,table:'',phone:'0906 555 0164',msg:''}
+  ];
+  var data;
+  try{ var raw=localStorage.getItem(KEY); data=raw?JSON.parse(raw):null; }catch(e){ data=null; }
+  if(!Array.isArray(data)) data=seed.slice();
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(data)); }catch(e){} }
+
+  // Toast
+  var toastEl=document.getElementById('toast'), tt;
+  function toast(m){ toastEl.textContent=m; toastEl.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){toastEl.classList.remove('show')},2600); }
+
+  // RSVP form
+  document.getElementById('rsvpForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('f-name').value.trim();
+    var att=(document.querySelector('input[name=att]:checked')||{}).value;
+    var err=document.getElementById('f-err');
+    if(!name){ err.textContent='Enter your full name so we can find you on the guest list.'; return; }
+    if(!att){ err.textContent='Choose whether you will attend.'; return; }
+    err.textContent='';
+    var entry={name:name,att:att,seats:att==='yes'?+document.getElementById('f-seats').value:0,table:'',
+      phone:document.getElementById('f-phone').value.trim(),msg:document.getElementById('f-msg').value.trim()};
+    data.unshift(entry); save(); render();
+    this.style.display='none';
+    document.getElementById('thanksText').textContent = att==='yes'
+      ? 'We received your RSVP for '+entry.seats+(entry.seats>1?' seats':' seat')+'. See you on February 13!'
+      : "We received your reply. We'll miss you, and thank you for letting us know.";
+    document.getElementById('thanks').classList.add('show');
+  });
+
+  // Admin
+  var site=document.getElementById('site'), admin=document.getElementById('admin');
+  document.getElementById('openAdmin').onclick=function(){ site.style.display='none'; admin.classList.add('show'); render(); window.scrollTo(0,0); };
+  document.getElementById('closeAdmin').onclick=function(){ admin.classList.remove('show'); site.style.display=''; window.scrollTo(0,0); };
+  document.getElementById('q').oninput=render;
+  document.getElementById('filt').onchange=render;
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}); }
+
+  function render(){
+    var q=document.getElementById('q').value.toLowerCase(), f=document.getElementById('filt').value;
+    var yes=data.filter(function(r){return r.att==='yes'});
+    document.getElementById('st-resp').textContent=data.length;
+    document.getElementById('st-seats').textContent=yes.reduce(function(a,r){return a+(+r.seats||0)},0);
+    document.getElementById('st-no').textContent=data.length-yes.length;
+    document.getElementById('st-unseated').textContent=yes.filter(function(r){return !r.table}).length;
+    var rows=data.map(function(r,i){return {r:r,i:i}}).filter(function(o){
+      return (f==='all'||o.r.att===f) && o.r.name.toLowerCase().indexOf(q)>-1;
+    });
+    var tb=document.getElementById('rows');
+    if(!rows.length){ tb.innerHTML='<tr><td colspan="6" class="muted">No guests match. Clear the search or change the filter.</td></tr>'; return; }
+    tb.innerHTML=rows.map(function(o){
+      var r=o.r, opts='<option value="">None</option>';
+      for(var t=1;t<=15;t++) opts+='<option value="'+t+'"'+(String(r.table)===String(t)?' selected':'')+'>Table '+t+'</option>';
+      return '<tr><td>'+esc(r.name)+'</td>'+
+        '<td><span class="tag '+r.att+'">'+(r.att==='yes'?'Attending':'Declined')+'</span></td>'+
+        '<td>'+(r.att==='yes'?r.seats:'–')+'</td>'+
+        '<td>'+(r.att==='yes'?'<select data-i="'+o.i+'" aria-label="Table for '+esc(r.name)+'">'+opts+'</select>':'–')+'</td>'+
+        '<td>'+esc(r.phone||'–')+'</td><td>'+esc(r.msg||'')+'</td></tr>';
+    }).join('');
+    tb.querySelectorAll('select').forEach(function(s){
+      s.onchange=function(){ data[+s.dataset.i].table=s.value; save(); render(); toast(s.value?'Table '+s.value+' assigned':'Table removed'); };
+    });
+  }
+
+  document.getElementById('copyBtn').onclick=function(){
+    var lines=[['Guest','Reply','Seats','Table','Mobile','Message'].join('\t')].concat(data.map(function(r){
+      return [r.name,r.att==='yes'?'Attending':'Declined',r.seats,r.table?('Table '+r.table):'',r.phone,(r.msg||'').replace(/\s+/g,' ')].join('\t');
+    }));
+    var txt=lines.join('\n');
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
+      var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+      toast(ok?'Copied. Paste it into Excel or Google Sheets.':'Copy failed. Select the table and copy it manually.');
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){toast('Copied. Paste it into Excel or Google Sheets.')},fallback);
+    } else fallback();
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
