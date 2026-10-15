@@ -22,6 +22,11 @@
 <main class="admin-wrap login" id="login" hidden>
   <p class="mono-lg" id="login-names"></p>
   <h2>Guest dashboard</h2>
+  <button class="btn google-btn" type="button" id="l-google">
+    <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.71v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.61z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+    Sign in with Google
+  </button>
+  <p class="or"><span>or use email and password</span></p>
   <form id="loginForm" novalidate>
     <label>Email
       <input id="l-email" type="email" autocomplete="username" required>
@@ -42,6 +47,13 @@
     <div class="who"><span class="muted small" id="who"></span> <button class="linkbtn small" id="signOut">Sign out</button></div>
   </div>
   <p class="emu-note" id="emu-note" hidden>Local test mode. You're using the emulator, not the live guest list.</p>
+
+  <div class="tabs" role="tablist" aria-label="Dashboard sections">
+    <button type="button" role="tab" id="tabbtn-guests" aria-controls="tab-guests" aria-selected="true">Guests</button>
+    <button type="button" role="tab" id="tabbtn-details" aria-controls="tab-details" aria-selected="false" tabindex="-1">Wedding details</button>
+  </div>
+
+  <div id="tab-guests" role="tabpanel" aria-labelledby="tabbtn-guests">
 
   <div class="stats">
     <div class="stat"><b id="st-invites">0</b><small>invitations</small></div>
@@ -84,6 +96,95 @@
       <thead><tr><th>Guest</th><th>Reply</th><th>Seats</th><th>Table</th><th>Mobile</th><th>Message</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
       <tbody id="rows"><tr><td colspan="7" class="muted">Loading guests…</td></tr></tbody>
     </table>
+  </div>
+  </div>
+
+  <div id="tab-details" role="tabpanel" aria-labelledby="tabbtn-details" hidden>
+    <p class="muted small" style="max-width:none">Everything here shows on the wedding site as soon as you save. <a href="/" target="_blank" rel="noopener">Open the site</a> · <span id="d-saved"></span></p>
+    <form id="detailsForm" class="details" novalidate>
+      <fieldset>
+        <legend>The couple</legend>
+        <div class="row3">
+          <label>First name<input id="d-first" maxlength="60" required></label>
+          <label>Second name<input id="d-second" maxlength="60" required></label>
+          <label>Monogram<input id="d-monogram" maxlength="20" placeholder="e.g. P & B" required></label>
+        </div>
+        <label>Invitation line<input id="d-invitation" maxlength="200"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Date and place</legend>
+        <div class="row2">
+          <label>Ceremony starts (Philippine time)<input type="datetime-local" id="d-date" required></label>
+          <label>City or area<input id="d-place" maxlength="200" placeholder="e.g. Tagaytay City, Cavite"></label>
+        </div>
+        <label>Closing line<input id="d-signoff" maxlength="200" placeholder="e.g. See you in Tagaytay"></label>
+        <p class="muted small" style="margin:0">The RSVP deadline is on the Guests tab.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Venues</legend>
+        <p class="muted small" style="margin:0">Each venue gets a Google Maps link from its name and address.</p>
+        <div class="list" data-list="venues"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Our story</legend>
+        <label>Story<textarea id="d-story" rows="8"></textarea></label>
+        <p class="muted small" style="margin:0">Leave a blank line between paragraphs.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Program</legend>
+        <div class="list" data-list="program"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Principal sponsors</legend>
+        <div class="list" data-list="principalSponsors"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Secondary sponsors</legend>
+        <div class="list" data-list="secondarySponsors"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Wedding party</legend>
+        <div class="list" data-list="weddingParty"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Attire and gifts</legend>
+        <label>What to wear<textarea id="d-attire" maxlength="2000" rows="4"></textarea></label>
+        <label>Attire note<input id="d-attire-note" maxlength="200"></label>
+        <p class="small" style="margin:0">Motif colors</p>
+        <div class="list" data-list="swatches"></div>
+        <label>Gifts<textarea id="d-gifts" maxlength="2000" rows="3"></textarea></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Questions</legend>
+        <div class="list" data-list="faq"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Contact for guests</legend>
+        <p class="muted small" style="margin:0">Shown when a guest's code doesn't work or RSVPs are closed.</p>
+        <div class="row3">
+          <label>Name<input id="d-cname" maxlength="60"></label>
+          <label>Mobile<input id="d-cphone" type="tel" maxlength="30"></label>
+          <label>Email<input id="d-cemail" type="email" maxlength="120"></label>
+        </div>
+      </fieldset>
+
+      <div class="save-bar">
+        <p class="err" id="d-err" role="alert"></p>
+        <span class="muted small" id="d-status" role="status"></span>
+        <button class="btn ghost small" type="button" id="d-reset" hidden>Discard changes</button>
+        <button class="btn small" type="submit" id="d-save">Save details</button>
+      </div>
+    </form>
   </div>
 </main>
 

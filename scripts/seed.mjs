@@ -40,12 +40,9 @@ try {
 
 const batch = db.batch();
 batch.set(db.doc(`admins/${user.uid}`), { email: ADMIN.email });
-batch.set(db.doc('config/site'), {
-  deadline: Timestamp.fromDate(new Date(content.rsvpDeadline)),
-  names: `${content.couple.first} & ${content.couple.second}`,
-  date: Timestamp.fromDate(new Date(content.ceremonyStart)),
-  venues: content.venues.map((v) => ({ title: v.title, name: v.name, address: v.address })),
-});
+batch.set(db.doc('config/site'), { deadline: Timestamp.fromDate(new Date(content.rsvpDeadline)) });
+const { rsvpDeadline, ...details } = content;
+batch.set(db.doc('config/content'), { ...details, updatedAt: FieldValue.serverTimestamp() });
 for (const [code, name, maxSeats, table, reply] of guests) {
   batch.set(db.doc(`invites/${code}`), { name, maxSeats, table, createdAt: FieldValue.serverTimestamp() });
   if (reply) {

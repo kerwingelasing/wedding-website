@@ -18,6 +18,9 @@
   --gold:#CDAA6E; --leaf:#8FB09A; --capiz:rgba(255,255,255,.04); --capiz-line:rgba(232,236,230,.08);
 }
 *,*::before,*::after{box-sizing:inherit}
+/* Chrome wraps <details> content in ::details-content, which the rule above doesn't reach. Separate rule so older browsers don't drop the one above. */
+::details-content{box-sizing:inherit}
+input,select,textarea,button{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
@@ -133,3 +136,6 @@ footer .sig{font-family:var(--serif);font-style:italic;font-size:30px;color:var(
 @media (prefers-reduced-motion: reduce){
   .toast{transition:none}
 }
+
+/* Wedding details load from Firestore; hide the empty text until the first render. */
+body.loading-content .hero-card,body.loading-content main section,body.loading-content footer{visibility:hidden}

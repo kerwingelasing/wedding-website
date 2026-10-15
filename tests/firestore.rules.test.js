@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { afterAll, beforeAll, beforeEach, describe, test } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing';
+import { content as defaults } from '../src/content.js';
 import {
   Timestamp, collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc,
 } from 'firebase/firestore';
@@ -134,4 +135,23 @@ describe('config', () => {
   test('non-admin cannot move the deadline', () => assertFails(setDoc(doc(stranger(), 'config', 'site'), { deadline: Timestamp.now() })));
   test('admin can move the deadline', () => assertSucceeds(updateDoc(doc(admin(), 'config', 'site'), { deadline: Timestamp.now() })));
   test('admin cannot set a non-date deadline', () => assertFails(setDoc(doc(admin(), 'config', 'site'), { deadline: 'Jan 10' })));
+});
+
+describe('config/content (wedding details)', () => {
+  const { rsvpDeadline, ...base } = defaults;
+  const details = (over = {}) => ({ ...base, updatedAt: serverTimestamp(), ...over });
+
+  test('anyone can read the wedding details', () => assertSucceeds(getDoc(doc(guest(), 'config', 'content'))));
+  test('guest cannot change the wedding details', () => assertFails(setDoc(doc(guest(), 'config', 'content'), details())));
+  test('non-admin cannot change the wedding details', () => assertFails(setDoc(doc(stranger(), 'config', 'content'), details())));
+  test('admin can save the wedding details', () => assertSucceeds(setDoc(doc(admin(), 'config', 'content'), details())));
+  test('admin cannot leave a name empty', () => assertFails(setDoc(doc(admin(), 'config', 'content'), details({ couple: { ...base.couple, first: '' } }))));
+  test('admin cannot save a bad ceremony date', () => assertFails(setDoc(doc(admin(), 'config', 'content'), details({ ceremonyStart: 'next Saturday' }))));
+  test('admin cannot remove every venue', () => assertFails(setDoc(doc(admin(), 'config', 'content'), details({ venues: [] }))));
+  test('admin cannot add unknown fields', () => assertFails(setDoc(doc(admin(), 'config', 'content'), details({ photos: [] }))));
+  test('admin cannot leave out a field', () => {
+    const { faq, ...partial } = details();
+    return assertFails(setDoc(doc(admin(), 'config', 'content'), partial));
+  });
+  test('client-chosen updatedAt is denied', () => assertFails(setDoc(doc(admin(), 'config', 'content'), details({ updatedAt: Timestamp.now() }))));
 });

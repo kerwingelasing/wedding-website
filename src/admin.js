@@ -1,14 +1,15 @@
 import {
-  getAuth, connectAuthEmulator, onAuthStateChanged, signInWithEmailAndPassword, signOut,
+  GoogleAuthProvider, getAuth, connectAuthEmulator, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut,
 } from 'firebase/auth';
 import {
   Timestamp, collection, connectFirestoreEmulator, doc, getDoc, getFirestore, onSnapshot, serverTimestamp, setDoc, updateDoc, writeBatch,
 } from 'firebase/firestore';
 import { FIRESTORE_EMULATOR, app, useEmulators } from './firebase.js';
-import { content, coupleNames } from './content.js';
+import { content, coupleNames, namesOf } from './content.js';
 import { escapeHtml as esc, generateCode, inviteLink } from './codes.js';
 import { parseInviteCsv } from './csv.js';
 import { exportXlsx, replyLabel } from './export.js';
+import { hasUnsavedDetails, initDetails, startDetails, stopDetails } from './details-editor.js';
 
 const $ = (id) => document.getElementById(id);
 const auth = getAuth(app);
@@ -22,6 +23,7 @@ let invites = new Map(); // code -> invite data
 let rsvps = new Map(); // code -> rsvp data
 let unsubs = [];
 let editing = null; // code being edited, or null when adding
+let site = content; // wedding details, kept live from config/content
 
 // ---------- Helpers ----------
 let toastTimer;
@@ -63,6 +65,38 @@ function show(view) {
 // ---------- Auth ----------
 $('login-names').textContent = coupleNames;
 $('emu-note').hidden = !useEmulators;
+// config/content is public, so the login screen can show the couple's current names.
+getDoc(doc(db, 'config', 'content'))
+  .then((snap) => { if (snap.exists()) showNames(snap.data()); })
+  .catch(() => {});
+
+function showNames(c) {
+  site = { ...site, ...c };
+  const names = namesOf(site);
+  $('login-names').textContent = names;
+  document.title = `Guest dashboard · ${site.couple.first} and ${site.couple.second}'s Wedding`;
+}
+
+initDetails({ db, toast, friendlyError, onNames: showNames });
+
+// ---------- Tabs ----------
+const TABS = ['guests', 'details'];
+function showTab(name) {
+  for (const t of TABS) {
+    const on = t === name;
+    $(`tab-${t}`).hidden = !on;
+    $(`tabbtn-${t}`).setAttribute('aria-selected', String(on));
+    $(`tabbtn-${t}`).tabIndex = on ? 0 : -1;
+  }
+}
+for (const t of TABS) $(`tabbtn-${t}`).addEventListener('click', () => showTab(t));
+document.querySelector('.tabs').addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const i = TABS.findIndex((t) => $(`tabbtn-${t}`).getAttribute('aria-selected') === 'true');
+  const next = TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length];
+  showTab(next);
+  $(`tabbtn-${next}`).focus();
+});
 
 onAuthStateChanged(auth, async (user) => {
   stopListening();
@@ -81,6 +115,7 @@ onAuthStateChanged(auth, async (user) => {
   $('who').textContent = user.email;
   show('dash');
   startListening();
+  startDetails();
   ensureConfig();
 });
 
@@ -106,7 +141,29 @@ $('loginForm').addEventListener('submit', async (e) => {
   }
 });
 
-$('signOut').addEventListener('click', () => signOut(auth));
+// Google sign-in. Any Google account can sign in; only those with an admins/{uid} doc get the dashboard.
+$('l-google').addEventListener('click', async () => {
+  const err = $('l-err');
+  err.textContent = '';
+  $('l-google').disabled = true;
+  try {
+    await signInWithPopup(auth, new GoogleAuthProvider());
+  } catch (ex) {
+    if (ex.code === 'auth/popup-closed-by-user' || ex.code === 'auth/cancelled-popup-request') return;
+    err.textContent = ex.code === 'auth/popup-blocked'
+      ? 'Your browser blocked the sign-in window. Allow pop-ups for this site, then try again.'
+      : ex.code === 'auth/unauthorized-domain' || ex.code === 'auth/operation-not-allowed'
+        ? 'Google sign-in isn’t set up for this site yet. Ask Kerwin to finish the setup.'
+        : friendlyError(ex);
+  } finally {
+    $('l-google').disabled = false;
+  }
+});
+
+$('signOut').addEventListener('click', () => {
+  if (hasUnsavedDetails() && !confirm('You have unsaved wedding details. Sign out anyway?')) return;
+  signOut(auth);
+});
 
 // ---------- Live data ----------
 function startListening() {
@@ -125,6 +182,7 @@ function startListening() {
 }
 
 function stopListening() {
+  stopDetails();
   unsubs.forEach((u) => u());
   unsubs = [];
   invites = new Map();
@@ -428,7 +486,7 @@ $('exportBtn').addEventListener('click', async () => {
   if (!all.length) return toast('No guests to export yet.');
   $('exportBtn').disabled = true;
   try {
-    const prefix = `${content.couple.first}-${content.couple.second}-guests`.toLowerCase().replace(/[^a-z0-9-]+/g, '-');
+    const prefix = `${site.couple.first}-${site.couple.second}-guests`.toLowerCase().replace(/[^a-z0-9-]+/g, '-');
     await exportXlsx(all, prefix);
     toast('Excel file downloaded');
   } catch (ex) {
@@ -450,16 +508,12 @@ function showDeadline(d) {
 }
 
 // The rules need config/site to accept RSVPs. Create it from content.js the first time.
+// The wedding details themselves live in config/content (Wedding details tab).
 async function ensureConfig() {
   try {
     const ref = doc(db, 'config', 'site');
     if ((await getDoc(ref)).exists()) return;
-    await setDoc(ref, {
-      deadline: Timestamp.fromDate(new Date(content.rsvpDeadline)),
-      names: coupleNames,
-      date: Timestamp.fromDate(new Date(content.ceremonyStart)),
-      venues: content.venues.map((v) => ({ title: v.title, name: v.name, address: v.address })),
-    });
+    await setDoc(ref, { deadline: Timestamp.fromDate(new Date(content.rsvpDeadline)) });
   } catch (ex) {
     toast(friendlyError(ex));
   }

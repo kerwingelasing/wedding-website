@@ -28,7 +28,8 @@ Keep secrets out of the repo. Firebase web config can live in `src/firebase.js`;
 - `invites/{code}`: `{ name, maxSeats, table, createdAt }`. One doc per invitation/household. `code` is a random 6 to 8 character string (avoid ambiguous characters like 0/O, 1/l).
 - `rsvps/{code}`: `{ attending: bool, seats: number, phone, message, submittedAt }`. Doc ID matches the invite code.
 - `admins/{uid}`: presence of doc marks an admin.
-- `config/site`: wedding details (names, date, venues, deadline) so the couple can edit later (upgrade).
+- `config/site`: `{ deadline }`, the RSVP deadline (rules enforce it).
+- `config/content`: everything guests see (names, date, venues, story, program, entourage, attire, FAQ, contact). The couple edits it on the dashboard's Wedding details tab; `src/content.js` holds the defaults used until it's saved, and the link-preview title baked in at build time.
 
 ## RSVP flow
 
@@ -55,7 +56,7 @@ Keep secrets out of the repo. Firebase web config can live in `src/firebase.js`;
 
 ## Optional upgrades (only if the client buys them)
 
-Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at reception, visual seating chart, couple-editable content, Tagalog/English toggle.
+Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at reception, visual seating chart, Tagalog/English toggle. (Couple-editable content is built.)
 
 ## Design rules
 
@@ -71,3 +72,4 @@ Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at recepti
 - Use the Firebase emulator suite for local development
 - Small, reviewable commits
 - Before deploying, confirm security rules tests pass and the site works on a phone
+- Live: project `wedding-site-2027`, guest site https://wedding-rsvp-site.web.app (Hosting site `wedding-rsvp-site`). Admins sign in with Google or email/password; add an admin by creating `admins/{uid}`.

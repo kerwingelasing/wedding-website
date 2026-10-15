@@ -74,10 +74,41 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Wedding details the couple edits on the dashboard. Limits match src/details-editor.js.
+    function shortText(s, min) {
+      return s is string && s.size() >= min && s.size() <= 200;
+    }
+
+    function listOf(l, max) {
+      return l is list && l.size() <= max;
+    }
+
+    function validContent(d) {
+      let keys = ['couple', 'invitationLine', 'ceremonyStart', 'place', 'signoff', 'contact', 'story',
+        'venues', 'program', 'principalSponsors', 'secondarySponsors', 'weddingParty',
+        'attire', 'attireNote', 'swatches', 'gifts', 'faq', 'updatedAt'];
+      return d.keys().hasAll(keys) && d.keys().hasOnly(keys)
+        && d.couple is map
+        && d.couple.first is string && d.couple.first.size() >= 1 && d.couple.first.size() <= 60
+        && d.couple.second is string && d.couple.second.size() >= 1 && d.couple.second.size() <= 60
+        && d.couple.monogram is string && d.couple.monogram.size() <= 20
+        && d.ceremonyStart is string && d.ceremonyStart.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:]{5,8}[+][0-9]{2}:[0-9]{2}$')
+        && shortText(d.invitationLine, 0) && shortText(d.place, 0) && shortText(d.signoff, 0)
+        && shortText(d.attireNote, 0)
+        && d.contact is map
+        && d.attire is string && d.attire.size() <= 2000
+        && d.gifts is string && d.gifts.size() <= 2000
+        && listOf(d.story, 20) && listOf(d.venues, 10) && d.venues.size() >= 1
+        && listOf(d.program, 40) && listOf(d.principalSponsors, 40) && listOf(d.secondarySponsors, 20)
+        && listOf(d.weddingParty, 40) && listOf(d.swatches, 12) && listOf(d.faq, 30)
+        && d.updatedAt == request.time;
+    }
+
     match /config/{docId} {
       allow read: if true;
       allow write: if isAdmin()
-        && (docId != 'site' || request.resource.data.deadline is timestamp);
+        && (docId != 'site' || request.resource.data.deadline is timestamp)
+        && (docId != 'content' || validContent(request.resource.data));
     }
   }
 }

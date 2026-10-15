@@ -1,8 +1,4 @@
-import {
-  connectFirestoreEmulator, doc, getDoc, getFirestore, serverTimestamp, setDoc,
-} from 'firebase/firestore/lite';
-import { FIRESTORE_EMULATOR, app, useEmulators } from './firebase.js';
-import { content } from './content.js';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore/lite';
 import { CODE_PATTERN, normalizeCode } from './codes.js';
 
 const $ = (id) => document.getElementById(id);
@@ -10,12 +6,8 @@ const STATES = ['rsvp-loading', 'rsvp-code', 'rsvp-invite', 'rsvp-thanks', 'rsvp
 const CODE_KEY = 'rsvp-code';
 const replyKey = (code) => `rsvp-reply-${code}`;
 
-const db = getFirestore(app);
-if (useEmulators) connectFirestoreEmulator(db, ...FIRESTORE_EMULATOR);
-
 let invite = null; // { code, name, maxSeats }
-let deadline = new Date(content.rsvpDeadline);
-let configReady = Promise.resolve();
+let db, content, deadline, deadlineLabel, thanksLine;
 
 // Storage can throw in private browsing; the site must work without it.
 const store = {
@@ -42,22 +34,16 @@ function withTimeout(promise, ms = 15000) {
   ]);
 }
 
-export async function initRsvp() {
+// main.js loads the wedding details and the deadline (config/site, also enforced by the rules) first.
+export async function initRsvp(opts) {
+  ({ db, content, deadline, deadlineLabel, thanksLine } = opts);
   $('rsvp-intro').textContent =
-    `Please reply by ${content.rsvpDeadlineLabel}. Enter the code from your invitation, or open the personal link we sent you.`;
+    `Please reply by ${deadlineLabel}. Enter the code from your invitation, or open the personal link we sent you.`;
   $('codeForm').addEventListener('submit', onCodeSubmit);
   $('rsvpForm').addEventListener('submit', onRsvpSubmit);
   $('rsvpForm').addEventListener('change', syncSeats);
   $('notMe').addEventListener('click', forgetInvite);
   $('changeReply').addEventListener('click', () => openForm(store.get(replyKey(invite.code))));
-
-  // The couple can move the deadline from the dashboard; the rules enforce the same value.
-  configReady = withTimeout(getDoc(doc(db, 'config', 'site')), 8000)
-    .then((snap) => {
-      const d = snap.exists() && snap.data().deadline;
-      if (d?.toDate) deadline = d.toDate();
-    })
-    .catch(() => {});
 
   const fromUrl = new URLSearchParams(location.search).get('code');
   const code = normalizeCode(fromUrl || store.get(CODE_KEY));
@@ -91,14 +77,13 @@ async function lookup(code, { fromLink = false } = {}) {
     history.replaceState(null, '', url);
   }
 
-  await configReady;
   $('greet').textContent = `Hi, ${invite.name}!`;
   $('greet-sub').textContent =
-    `We've saved ${seatsText(invite.maxSeats)} for you. Please reply by ${content.rsvpDeadlineLabel}.`;
+    `We've saved ${seatsText(invite.maxSeats)} for you. Please reply by ${deadlineLabel}.`;
 
   if (Date.now() > deadline.getTime()) {
     $('closedText').textContent =
-      `The RSVP deadline was ${content.rsvpDeadlineLabel}. If your plans have changed, please ${contactLine()}.`;
+      `The RSVP deadline was ${deadlineLabel}. If your plans have changed, please ${contactLine()}.`;
     return show('rsvp-closed');
   }
 
@@ -205,7 +190,7 @@ async function onRsvpSubmit(e) {
 
 function showThanks(reply) {
   $('thanksText').textContent = reply.attending
-    ? `We received your RSVP for ${seatsText(reply.seats)}. ${content.thanksLine}`
+    ? `We received your RSVP for ${seatsText(reply.seats)}. ${thanksLine}`
     : "We received your reply. We'll miss you, and thank you for letting us know.";
   show('rsvp-thanks');
 }

@@ -3,12 +3,12 @@ import { initializeApp } from 'firebase/app';
 // Firebase web config from the console (Project settings > Your apps).
 // These values identify the project; they are not secrets. Access is controlled by firestore.rules.
 const firebaseConfig = {
-  apiKey: 'REPLACE_ME',
-  authDomain: 'REPLACE_ME.firebaseapp.com',
-  projectId: 'REPLACE_ME',
-  storageBucket: 'REPLACE_ME.firebasestorage.app',
-  messagingSenderId: 'REPLACE_ME',
-  appId: 'REPLACE_ME',
+  apiKey: 'AIzaSyDUZnLtOFXp8cSjFQuRNfHjg4w4O1hOruo',
+  authDomain: 'wedding-site-2027.firebaseapp.com',
+  projectId: 'wedding-site-2027',
+  storageBucket: 'wedding-site-2027.firebasestorage.app',
+  messagingSenderId: '50585727644',
+  appId: '1:50585727644:web:be4131c29590b93fdcb359',
 };
 
 const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
