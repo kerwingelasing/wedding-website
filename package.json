@@ -8,7 +8,7 @@
     "emulators": "firebase emulators:start --project demo-wedding --only auth,firestore",
     "seed": "node scripts/seed.mjs",
     "test:rules": "firebase emulators:exec --project demo-wedding --only firestore \"vitest run\"",
-    "deploy": "npm run test:rules && npm run build && firebase deploy"
+    "deploy": "node scripts/check-pushed.mjs && npm run test:rules && npm run build && firebase deploy"
   },
   "description": "Wedding website with RSVP and admin dashboard (Firebase)",
   "dependencies": {

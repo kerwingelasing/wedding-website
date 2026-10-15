@@ -72,4 +72,5 @@ Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at recepti
 - Use the Firebase emulator suite for local development
 - Small, reviewable commits
 - Before deploying, confirm security rules tests pass and the site works on a phone
+- Deploys are blocked until everything is committed and pushed to GitHub (`scripts/check-pushed.mjs`, run as a predeploy hook in `firebase.json`). Push first, then `npm run deploy`.
 - Live: project `wedding-site-2027`, guest site https://wedding-rsvp-site.web.app (Hosting site `wedding-rsvp-site`). Admins sign in with Google or email/password; add an admin by creating `admins/{uid}`.
