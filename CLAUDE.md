@@ -28,7 +28,7 @@ Keep secrets out of the repo. Firebase web config can live in `src/firebase.js`;
 - `invites/{code}`: `{ name, maxSeats, table, createdAt }`. One doc per invitation/household. `code` is a random 6 to 8 character string (avoid ambiguous characters like 0/O, 1/l).
 - `rsvps/{code}`: `{ attending: bool, seats: number, phone, message, submittedAt }`. Doc ID matches the invite code.
 - `admins/{uid}`: presence of doc marks an admin.
-- `config/site`: `{ deadline }`, the RSVP deadline (rules enforce it).
+- `config/site`: `{ deadline, theme }`: the RSVP deadline (rules enforce it) and the site look picked on the dashboard (`blush`, `golden`, or `garden`; see `src/looks.js`).
 - `config/content`: everything guests see (names, date, venues, story, program, entourage, attire, FAQ, contact). The couple edits it on the dashboard's Wedding details tab; `src/content.js` holds the defaults used until it's saved, and the link-preview title baked in at build time.
 
 ## RSVP flow
@@ -60,7 +60,8 @@ Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at recepti
 
 ## Design rules
 
-- Keep the prototype's sections, layout, and copy style. Look: "champagne and blush" (hero and opening doors have blush/champagne glows, drifting petals, gold sparkles, satin bow). Bodoni Moda (display) + Figtree (body). Palette: plum ink #3A2A2C, ivory #FBF6EF, gold #B08A4F, rose #9A5560 (links), blush #F3D6D2, champagne #EFDDBF; dark mode is warm candlelit rose (#221A1C)
+- Keep the prototype's sections, layout, and copy style. Bodoni Moda (display) + Figtree (body).
+- Three site looks, switchable on the dashboard (Site look), each with light and dark mode and matching opening doors. Default is "champagne and blush" (`styles.css`, `intro.css`): blush/champagne glows, drifting petals, gold sparkles; plum ink #3A2A2C, ivory #FBF6EF, gold #B08A4F, rose #9A5560; dark is candlelit rose #221A1C. "Golden hour over Taal" and "garden arch" live in `looks.css`. Preview any look with `/?look=<id>`; add a new look in `src/looks.js`, `looks.css`, and the list in `firestore.rules`.
 - Mobile first; test at 360px wide
 - Support light and dark mode via CSS variables
 - Respect `prefers-reduced-motion`

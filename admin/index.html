@@ -74,6 +74,20 @@
     </form>
   </details>
 
+  <details class="settings">
+    <summary>Site look: <span id="look-label">…</span></summary>
+    <form id="lookForm" class="look-form" novalidate>
+      <fieldset class="looks" id="look-options">
+        <legend class="visually-hidden">Choose how the guest site looks</legend>
+      </fieldset>
+      <p class="muted small" style="margin:0">Each look has its own light and dark mode and matching opening doors. Guests see the change on their next visit.</p>
+      <div class="look-actions">
+        <button class="btn ghost small" type="button" id="lookPreview">Preview</button>
+        <button class="btn small" type="submit" id="lookSave">Use this look</button>
+      </div>
+    </form>
+  </details>
+
   <div class="tools">
     <input id="q" type="search" placeholder="Search name, code, or mobile" aria-label="Search guests">
     <select id="filt" aria-label="Filter by reply">

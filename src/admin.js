@@ -9,6 +9,7 @@ import { content, coupleNames, fullDate, mergeContent, namesOf } from './content
 import { escapeHtml as esc, generateCode, inviteLink } from './codes.js';
 import { parseInviteCsv } from './csv.js';
 import { exportXlsx, replyLabel } from './export.js';
+import { DEFAULT_LOOK, LOOKS, isLook } from './looks.js';
 import { hasUnsavedDetails, initDetails, startDetails, stopDetails } from './details-editor.js';
 
 const $ = (id) => document.getElementById(id);
@@ -180,6 +181,7 @@ function startListening() {
     onSnapshot(doc(db, 'config', 'site'), (snap) => {
       currentDeadline = snap.data()?.deadline?.toDate() || null;
       showDeadline(currentDeadline);
+      showLook(snap.data()?.theme);
     }, onErr),
     // The wedding date, so the deadline can't be set after it.
     onSnapshot(doc(db, 'config', 'content'), (snap) => {
@@ -541,5 +543,48 @@ $('deadlineForm').addEventListener('submit', async (e) => {
     toast('Deadline saved');
   } catch (ex) {
     toast(friendlyError(ex));
+  }
+});
+
+// ---------- Site look ----------
+let savedLook = DEFAULT_LOOK;
+
+$('look-options').insertAdjacentHTML('beforeend', LOOKS.map((l) => `
+  <label class="look">
+    <input type="radio" name="look" value="${l.id}">
+    <b>${esc(l.name)}<span class="now" data-now="${l.id}" hidden>In use</span></b>
+    <small>${esc(l.desc)}</small>
+    <span class="look-sw">${l.swatches.map((c) => `<i style="background:${c}"></i>`).join('')}</span>
+  </label>`).join(''));
+
+function showLook(id) {
+  savedLook = isLook(id) ? id : DEFAULT_LOOK;
+  $('look-label').textContent = LOOKS.find((l) => l.id === savedLook).name;
+  for (const el of document.querySelectorAll('[data-now]')) el.hidden = el.dataset.now !== savedLook;
+  // Don't undo a choice the couple is in the middle of making.
+  if (!document.querySelector('input[name=look]:checked') || !$('lookForm').contains(document.activeElement)) {
+    document.querySelector(`input[name=look][value="${savedLook}"]`).checked = true;
+  }
+}
+
+const chosenLook = () => document.querySelector('input[name=look]:checked')?.value || savedLook;
+
+// Opens the guest site in the chosen look without saving it.
+$('lookPreview').addEventListener('click', () => {
+  window.open(`/?look=${chosenLook()}&intro`, '_blank', 'noopener');
+});
+
+$('lookForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = chosenLook();
+  if (id === savedLook) return toast('That look is already in use.');
+  $('lookSave').disabled = true;
+  try {
+    await updateDoc(doc(db, 'config', 'site'), { theme: id });
+    toast(`The site now uses ${LOOKS.find((l) => l.id === id).name}.`);
+  } catch (ex) {
+    toast(friendlyError(ex));
+  } finally {
+    $('lookSave').disabled = false;
   }
 });

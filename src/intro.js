@@ -1,4 +1,4 @@
-import { scatter } from './sparkles.js';
+import { scatter } from './decor.js';
 
 const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');

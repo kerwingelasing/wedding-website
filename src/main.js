@@ -6,7 +6,8 @@ import {
 import { escapeHtml as esc } from './codes.js';
 import { initRsvp } from './rsvp.js';
 import { initIntro, initReveals } from './intro.js';
-import { scatter } from './sparkles.js';
+import { drawBlooms, drawRidge, scatter } from './decor.js';
+import { DEFAULT_LOOK, applyLook, isLook } from './looks.js';
 
 initIntro();
 
@@ -27,6 +28,11 @@ function withTimeout(promise, ms) {
 
 // Hero petals and sparkles, kept to the edges so they never cross the names or countdown
 scatter($('hero-confetti'), { petals: 14, sparkles: 34, keepClear: (x, y) => x > 16 && x < 84 && y > 8 && y < 92 });
+drawRidge('.ridge');
+drawBlooms('.blooms');
+
+// ?look=golden previews a look without saving it (the dashboard's Preview button uses this).
+const previewLook = new URLSearchParams(location.search).get('look');
 
 // Countdown
 let target = new Date(defaults.ceremonyStart).getTime();
@@ -110,7 +116,10 @@ async function load() {
     saved = contentSnap.exists() ? contentSnap.data() : null;
     const d = siteSnap.exists() && siteSnap.data().deadline;
     if (d?.toDate) deadline = d.toDate();
-    cache.set({ content: saved, deadline: deadline.toISOString() });
+    const theme = siteSnap.exists() && siteSnap.data().theme;
+    const look = isLook(theme) ? theme : DEFAULT_LOOK;
+    if (!isLook(previewLook)) applyLook(look);
+    cache.set({ content: saved, deadline: deadline.toISOString(), theme: look });
   } catch { /* offline or slow: keep the cached copy or the defaults */ }
 
   const c = mergeContent(saved);

@@ -135,6 +135,10 @@ describe('config', () => {
   test('non-admin cannot move the deadline', () => assertFails(setDoc(doc(stranger(), 'config', 'site'), { deadline: Timestamp.now() })));
   test('admin can move the deadline', () => assertSucceeds(updateDoc(doc(admin(), 'config', 'site'), { deadline: Timestamp.now() })));
   test('admin cannot set a non-date deadline', () => assertFails(setDoc(doc(admin(), 'config', 'site'), { deadline: 'Jan 10' })));
+  test('admin can pick a site look', () => assertSucceeds(updateDoc(doc(admin(), 'config', 'site'), { theme: 'golden' })));
+  test('admin cannot pick an unknown look', () => assertFails(updateDoc(doc(admin(), 'config', 'site'), { theme: 'neon' })));
+  test('guest cannot change the site look', () => assertFails(updateDoc(doc(guest(), 'config', 'site'), { theme: 'garden' })));
+  test('non-admin cannot change the site look', () => assertFails(updateDoc(doc(stranger(), 'config', 'site'), { theme: 'garden' })));
 });
 
 describe('config/content (wedding details)', () => {

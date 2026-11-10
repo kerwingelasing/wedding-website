@@ -16,17 +16,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/styles.css">
 <link rel="stylesheet" href="/src/intro.css">
+<link rel="stylesheet" href="/src/looks.css">
 <script>
   // Show the opening scene once per browser session (add ?intro to the URL to see it again).
   try { if (!sessionStorage.getItem('intro-seen') || new URLSearchParams(location.search).has('intro')) document.documentElement.classList.add('intro-on'); }
   catch (e) { document.documentElement.classList.add('intro-on'); }
+  // Apply the site look before first paint: a ?look= preview, else the look this browser last saw.
+  try {
+    var look = new URLSearchParams(location.search).get('look') || (JSON.parse(localStorage.getItem('site-content')) || {}).theme;
+    if (/^(blush|golden|garden)$/.test(look)) document.documentElement.dataset.look = look;
+  } catch (e) {}
 </script>
 </head>
 <body class="loading-content">
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Wedding invitation">
-  <div class="door left" aria-hidden="true"><div class="face front"><div class="confetti"></div></div><div class="face back"></div></div>
-  <div class="door right" aria-hidden="true"><div class="face front"><div class="confetti"></div></div><div class="face back"></div></div>
+  <div class="door left" aria-hidden="true"><div class="face front"><div class="confetti"></div><span class="door-arch"></span><svg class="ridge" viewBox="0 0 300 150" preserveAspectRatio="none"></svg><svg class="blooms" viewBox="0 0 90 110"></svg></div><div class="face back"></div></div>
+  <div class="door right" aria-hidden="true"><div class="face front"><div class="confetti"></div><span class="door-arch"></span><svg class="ridge" viewBox="0 0 300 150" preserveAspectRatio="none"></svg><svg class="blooms" viewBox="0 0 90 110"></svg></div><div class="face back"></div></div>
   <button class="ribbon" id="intro-open" type="button" aria-label="Open the invitation">
     <span class="band l"></span><span class="band r"></span>
     <svg class="bow" viewBox="0 0 200 150" aria-hidden="true">
@@ -72,7 +78,11 @@
 <main id="site">
 <header class="hero" id="top" tabindex="-1">
   <div class="confetti" id="hero-confetti" aria-hidden="true"></div>
+  <div class="sun" aria-hidden="true"></div>
+  <svg class="ridge" viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true"></svg>
   <div class="hero-card">
+    <svg class="blooms l" viewBox="0 0 90 110" aria-hidden="true"></svg>
+    <svg class="blooms r" viewBox="0 0 90 110" aria-hidden="true"></svg>
     <p class="pre" id="hero-pre"></p>
     <h1 id="hero-names"></h1>
     <div class="rule" aria-hidden="true">✦</div>

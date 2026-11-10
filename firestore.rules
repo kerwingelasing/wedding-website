@@ -108,6 +108,9 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin()
         && (docId != 'site' || request.resource.data.deadline is timestamp)
+        // Site look picked on the dashboard. Keep in step with src/looks.js.
+        && (docId != 'site' || !('theme' in request.resource.data)
+            || request.resource.data.theme in ['blush', 'golden', 'garden'])
         && (docId != 'content' || validContent(request.resource.data));
     }
   }
