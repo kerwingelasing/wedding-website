@@ -7,7 +7,24 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 // Names come from the live content (the couple can edit them), so main.js sets them on render.
 export function setIntroNames(c) {
   const el = document.getElementById('intro-names');
-  if (el) el.innerHTML = `${esc(c.couple.first)}<span class="amp">&amp;</span>${esc(c.couple.second)}`;
+  if (!el) return;
+  el.innerHTML = `${esc(c.couple.first)}<span class="amp">&amp;</span>${esc(c.couple.second)}`;
+  placeRibbon();
+}
+
+// Keep the bow below the names: at 58% of the screen, or lower when long names or a short,
+// wide screen push the names down. The seam line in intro.css uses the same position.
+function placeRibbon() {
+  const intro = document.getElementById('intro');
+  if (!intro?.isConnected) return;
+  const textBottom = intro.querySelector('.intro-text').getBoundingClientRect().bottom;
+  const bow = intro.querySelector('.bow').getBoundingClientRect().height;
+  const height = intro.clientHeight;
+  const y = Math.max(height * 0.58, textBottom + bow * 0.44 + 28);
+  intro.style.setProperty('--ribbon-y', `${Math.round(y)}px`);
+  // On very short screens (a phone held sideways) the hint would run into the bow; the bow is cue enough.
+  const hint = intro.querySelector('.intro-hint');
+  hint.style.visibility = y + bow * 0.56 + 12 > height - hint.offsetHeight - height * 0.09 ? 'hidden' : '';
 }
 
 // Opening scene: untie the bow, swing the doors open, reveal the hero.
@@ -22,6 +39,10 @@ export function initIntro() {
 
   drawFerns('.intro .ferns.bottom', 'bottom');
   drawFerns('.intro .ferns.top', 'top');
+  // Re-place the bow whenever the screen or the words change size (rotation, fonts loading, greeting).
+  const ro = new ResizeObserver(placeRibbon);
+  ro.observe(intro);
+  ro.observe(intro.querySelector('.intro-text'));
 
   // Keep keyboard and screen readers inside the scene until it opens.
   outside.forEach((el) => (el.inert = true));
@@ -30,6 +51,7 @@ export function initIntro() {
   document.addEventListener('invite-found', (e) => {
     if (intro.isConnected && !intro.classList.contains('untie')) {
       document.getElementById('intro-pre').textContent = `${e.detail.name}, you're invited to the wedding of`;
+      placeRibbon();
     }
   });
 
