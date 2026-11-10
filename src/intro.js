@@ -1,4 +1,4 @@
-import { drawFerns } from './ferns.js';
+import { scatter } from './sparkles.js';
 
 const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -13,8 +13,11 @@ export function initIntro() {
     return;
   }
 
-  drawFerns('.intro .ferns.bottom', 'bottom');
-  drawFerns('.intro .ferns.top', 'top');
+  // Petals and sparkles on each door, clear of the bow and the hint (x is measured within the door).
+  const [left, right] = intro.querySelectorAll('.door .confetti');
+  const nearSeam = (x, y, seamSide) => (y > 34 && y < 68 && seamSide) || (y > 82 && seamSide);
+  scatter(left, { petals: 8, sparkles: 18, keepClear: (x, y) => nearSeam(x, y, x > 45) });
+  scatter(right, { petals: 8, sparkles: 18, keepClear: (x, y) => nearSeam(x, y, x < 55) });
 
   // Keep keyboard and screen readers inside the scene until it opens.
   outside.forEach((el) => (el.inert = true));
@@ -30,7 +33,7 @@ export function initIntro() {
     setTimeout(() => {
       intro.style.display = 'block'; // stays visible while the doors finish swinging
       intro.classList.add('open');
-      root.classList.remove('intro-on'); // hero rises and the ferns grow in
+      root.classList.remove('intro-on'); // hero rises, petals start drifting
       outside.forEach((el) => (el.inert = false));
       document.getElementById('top').focus({ preventScroll: true });
     }, still ? 0 : 520);

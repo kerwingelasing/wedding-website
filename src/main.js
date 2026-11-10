@@ -6,7 +6,7 @@ import {
 import { escapeHtml as esc } from './codes.js';
 import { initRsvp } from './rsvp.js';
 import { initIntro, initReveals } from './intro.js';
-import { drawFerns } from './ferns.js';
+import { scatter } from './sparkles.js';
 
 initIntro();
 
@@ -25,9 +25,8 @@ function withTimeout(promise, ms) {
   return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))]);
 }
 
-// Hero ferns
-drawFerns('.hero-ferns.bl, .hero-ferns.br', 'bottom');
-drawFerns('.hero-ferns.tl, .hero-ferns.tr', 'top');
+// Hero petals and sparkles, kept to the edges so they never cross the names or countdown
+scatter($('hero-confetti'), { petals: 14, sparkles: 34, keepClear: (x, y) => x > 16 && x < 84 && y > 8 && y < 92 });
 
 // Countdown
 let target = new Date(defaults.ceremonyStart).getTime();

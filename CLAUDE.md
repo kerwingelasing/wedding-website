@@ -60,7 +60,7 @@ Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at recepti
 
 ## Design rules
 
-- Keep the prototype's style (the hero now uses a sage watercolor wash with ferns instead of the capiz lattice, matching the opening scene): Bodoni Moda (display) + Figtree (body), palette ink green #1E3B30, fern #4F6F5B, gold #9C7A43, pearl #F3F4EF
+- Keep the prototype's sections, layout, and copy style. Look: "champagne and blush" (hero and opening doors have blush/champagne glows, drifting petals, gold sparkles, satin bow). Bodoni Moda (display) + Figtree (body). Palette: plum ink #3A2A2C, ivory #FBF6EF, gold #B08A4F, rose #9A5560 (links), blush #F3D6D2, champagne #EFDDBF; dark mode is warm candlelit rose (#221A1C)
 - Mobile first; test at 360px wide
 - Support light and dark mode via CSS variables
 - Respect `prefers-reduced-motion`

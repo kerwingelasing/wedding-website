@@ -1,4 +1,4 @@
-/* Opening scene: two watercolor doors with ferns, tied with a satin bow. Tap to untie, the doors
+/* Opening scene: two blush-and-champagne doors with petals and sparkles, tied with a satin bow. Tap to untie, the doors
    swing open onto the hero. Shown once per browser session; html.intro-on is set by the inline
    script in index.html before first paint so the site never flashes underneath. */
 .intro{display:none}
@@ -20,18 +20,17 @@ html.intro-on body{overflow:hidden}
 /* One watercolor wash spread across both doors: each door shows its half of a 200%-wide canvas. */
 .face.front{
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/180px 180px,
-    radial-gradient(ellipse 30% 26% at 7% 94%,var(--wash-sage),transparent),
-    radial-gradient(ellipse 34% 22% at 93% 98%,var(--wash-fern),transparent),
-    radial-gradient(ellipse 40% 18% at 50% 104%,var(--wash-sage),transparent),
-    radial-gradient(ellipse 34% 26% at 88% 6%,var(--wash-champagne),transparent),
-    radial-gradient(ellipse 26% 18% at 10% 4%,var(--wash-champagne),transparent),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .22 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/180px 180px,
+    radial-gradient(ellipse 35% 45% at 5% 0%,var(--glow-blush),transparent 70%),
+    radial-gradient(ellipse 35% 45% at 100% 12%,var(--glow-champagne),transparent 70%),
+    radial-gradient(ellipse 45% 40% at 50% 105%,var(--glow-rose),transparent 70%),
+    radial-gradient(ellipse 30% 30% at 0% 100%,var(--glow-champagne),transparent 70%),
     var(--paper);
-  background-size:180px 180px,200% 100%,200% 100%,200% 100%,200% 100%,200% 100%;
-  background-repeat:repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
+  background-size:180px 180px,200% 100%,200% 100%,200% 100%,200% 100%;
+  background-repeat:repeat,no-repeat,no-repeat,no-repeat,no-repeat;
 }
-.door.left .face.front{background-position:0 0,left top,left top,left top,left top,left top}
-.door.right .face.front{background-position:0 0,right top,right top,right top,right top,right top}
+.door.left .face.front{background-position:0 0,left top,left top,left top,left top}
+.door.right .face.front{background-position:0 0,right top,right top,right top,right top}
 /* The seam where the doors meet */
 .face.front::after{content:"";position:absolute;top:0;bottom:0;width:1px;background:var(--seam)}
 .door.left .face.front::after{right:0}
@@ -39,11 +38,6 @@ html.intro-on body{overflow:hidden}
 .intro{--seam:color-mix(in srgb,var(--gold) 45%,transparent);--bow:clamp(220px,min(78vw,52vh),460px)}
 .face.back{transform:rotateY(180deg);background:linear-gradient(90deg,#B89766,#E6D8BD 55%,#D9C4A0)}
 
-/* Ferns, drawn by ferns.js (colors in styles.css). The right door mirrors the left. */
-.intro .ferns{position:absolute;left:0;width:100%;pointer-events:none}
-.intro .ferns.bottom{bottom:0;height:62%}
-.intro .ferns.top{top:0;height:30%}
-.door.right .ferns{transform:scaleX(-1)}
 
 .intro-hint{position:absolute;left:50%;translate:-50% 0;width:max-content;bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);text-align:center;margin:0;
   padding:6px 14px;border-radius:999px;background:color-mix(in srgb,var(--paper) 82%,transparent);
@@ -85,7 +79,7 @@ html.intro-on body{overflow:hidden}
 /* The hero waits behind the doors, then rises into place */
 .hero-card{transition:opacity .9s ease .35s,transform .9s ease .35s}
 html.intro-on .hero-card{opacity:0;transform:translateY(16px)}
-html.intro-on .hero-ferns,html.intro-on .hero-ferns .frond-group{animation-play-state:paused}
+html.intro-on .hero .petal,html.intro-on .hero .sparkle{animation-play-state:paused}
 
 /* Scroll reveals (classes added by intro.js, so content stays visible without JavaScript) */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.6,.2,1)}

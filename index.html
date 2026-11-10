@@ -8,8 +8,8 @@
 <meta property="og:title" content="%TITLE%">
 <meta property="og:description" content="%DESCRIPTION%">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#F3F4EF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121A16" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FBF6EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#221A1C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,8 +25,8 @@
 <body class="loading-content">
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Wedding invitation">
-  <div class="door left" aria-hidden="true"><div class="face front"><svg class="ferns top" viewBox="0 0 200 260" preserveAspectRatio="xMinYMin meet"></svg><svg class="ferns bottom" viewBox="0 0 200 520" preserveAspectRatio="xMinYMax meet"></svg></div><div class="face back"></div></div>
-  <div class="door right" aria-hidden="true"><div class="face front"><svg class="ferns top" viewBox="0 0 200 260" preserveAspectRatio="xMinYMin meet"></svg><svg class="ferns bottom" viewBox="0 0 200 520" preserveAspectRatio="xMinYMax meet"></svg></div><div class="face back"></div></div>
+  <div class="door left" aria-hidden="true"><div class="face front"><div class="confetti"></div></div><div class="face back"></div></div>
+  <div class="door right" aria-hidden="true"><div class="face front"><div class="confetti"></div></div><div class="face back"></div></div>
   <button class="ribbon" id="intro-open" type="button" aria-label="Open the invitation">
     <span class="band l"></span><span class="band r"></span>
     <svg class="bow" viewBox="0 0 200 150" aria-hidden="true">
@@ -71,13 +71,11 @@
 
 <main id="site">
 <header class="hero" id="top" tabindex="-1">
-  <svg class="ferns hero-ferns tl" viewBox="0 0 200 260" aria-hidden="true"></svg>
-  <svg class="ferns hero-ferns tr" viewBox="0 0 200 260" aria-hidden="true"></svg>
-  <svg class="ferns hero-ferns bl" viewBox="0 0 200 520" aria-hidden="true"></svg>
-  <svg class="ferns hero-ferns br" viewBox="0 0 200 520" aria-hidden="true"></svg>
+  <div class="confetti" id="hero-confetti" aria-hidden="true"></div>
   <div class="hero-card">
     <p class="pre" id="hero-pre"></p>
     <h1 id="hero-names"></h1>
+    <div class="rule" aria-hidden="true">✦</div>
     <p class="date" id="hero-date"></p>
     <p class="place" id="hero-place"></p>
     <div class="count" id="count" role="timer" aria-label="Time until the wedding">

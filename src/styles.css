@@ -1,9 +1,10 @@
 :root{
-  --bg:#F3F4EF; --surface:#FFFFFF; --ink:#1E3B30; --muted:#5C6B62; --line:#D5D9CF;
-  --gold:#9C7A43; --leaf:#4F6F5B; 
-  /* Watercolor wash and ferns (hero and opening scene) */
-  --paper:#F7F5EE; --wash-sage:rgba(143,168,143,.5); --wash-fern:rgba(79,111,91,.3); --wash-champagne:rgba(230,216,189,.85);
-  --fern-1:rgba(70,103,83,.8); --fern-2:rgba(118,150,121,.72); --fern-3:rgba(79,111,91,.4);
+  /* Champagne and blush: warm ivory, plum ink, gold, rose accents */
+  --bg:#FBF6EF; --surface:#FFFFFF; --ink:#3A2A2C; --muted:#7A6466; --line:#ECDFD8;
+  --gold:#B08A4F; --leaf:#9A5560;
+  /* Hero and opening scene glows, petals and sparkles */
+  --paper:#FBF6EF; --glow-blush:#F3D6D2; --glow-champagne:#EFDDBF; --glow-rose:#F2D9D5;
+  --petal:#E7B7B1; --sparkle:#C9A15E;
   --serif:"Bodoni Moda", "Didot", Georgia, serif;
   --sans:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   box-sizing:border-box;
@@ -12,17 +13,17 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#121A16; --surface:#1A241F; --ink:#E8ECE6; --muted:#A3B0A7; --line:#2E3B34;
-    --gold:#CDAA6E; --leaf:#8FB09A; 
-    --paper:#131B17; --wash-sage:rgba(143,176,154,.2); --wash-fern:rgba(79,111,91,.45); --wash-champagne:rgba(205,170,110,.13);
-    --fern-1:rgba(143,176,154,.42); --fern-2:rgba(79,111,91,.75); --fern-3:rgba(143,176,154,.2);
+    --bg:#221A1C; --surface:#2B2124; --ink:#F6ECE6; --muted:#C9B3AE; --line:#3D3033;
+    --gold:#D9B577; --leaf:#E3A9B0;
+    --paper:#221A1C; --glow-blush:rgba(190,112,120,.35); --glow-champagne:rgba(217,181,119,.22); --glow-rose:rgba(190,112,120,.28);
+    --petal:#B9737B; --sparkle:#D9B577;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#121A16; --surface:#1A241F; --ink:#E8ECE6; --muted:#A3B0A7; --line:#2E3B34;
-  --gold:#CDAA6E; --leaf:#8FB09A; 
-    --paper:#131B17; --wash-sage:rgba(143,176,154,.2); --wash-fern:rgba(79,111,91,.45); --wash-champagne:rgba(205,170,110,.13);
-    --fern-1:rgba(143,176,154,.42); --fern-2:rgba(79,111,91,.75); --fern-3:rgba(143,176,154,.2);
+  --bg:#221A1C; --surface:#2B2124; --ink:#F6ECE6; --muted:#C9B3AE; --line:#3D3033;
+  --gold:#D9B577; --leaf:#E3A9B0;
+  --paper:#221A1C; --glow-blush:rgba(190,112,120,.35); --glow-champagne:rgba(217,181,119,.22); --glow-rose:rgba(190,112,120,.28);
+  --petal:#B9737B; --sparkle:#D9B577;
 }
 *,*::before,*::after{box-sizing:inherit}
 /* Chrome wraps <details> content in ::details-content, which the rule above doesn't reach. Separate rule so older browsers don't drop the one above. */
@@ -45,44 +46,38 @@ nav .mono{font-family:var(--serif);font-style:italic;font-size:20px;white-space:
 nav a.l{font-size:14px;color:var(--muted);text-decoration:none;white-space:nowrap}
 nav a.l:hover{color:var(--ink)}
 
-/* Hero: watercolor wash with ferns growing from the corners (drawn by ferns.js) */
+/* Hero: blush and champagne glows with drifting petals and gold sparkles (scattered by sparkles.js) */
 .hero{position:relative;min-height:88vh;display:grid;place-items:center;overflow:hidden;padding:48px 20px;
   background:
-    radial-gradient(ellipse 34% 30% at 0% 100%,var(--wash-sage),transparent),
-    radial-gradient(ellipse 34% 30% at 100% 100%,var(--wash-fern),transparent),
-    radial-gradient(ellipse 50% 22% at 50% 108%,var(--wash-sage),transparent),
-    radial-gradient(ellipse 36% 30% at 100% 0%,var(--wash-champagne),transparent),
-    radial-gradient(ellipse 30% 24% at 0% 0%,var(--wash-champagne),transparent),
+    radial-gradient(ellipse 70% 45% at 10% 0%,var(--glow-blush),transparent 70%),
+    radial-gradient(ellipse 70% 45% at 100% 15%,var(--glow-champagne),transparent 70%),
+    radial-gradient(ellipse 80% 40% at 50% 105%,var(--glow-rose),transparent 70%),
     var(--paper)}
-.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at center,color-mix(in srgb,var(--paper) 70%,transparent) 20%,transparent 75%);pointer-events:none}
-.hero-ferns{position:absolute;z-index:1;pointer-events:none;height:auto;animation:fern-in 1.8s cubic-bezier(.2,.6,.2,1) both}
-.hero-ferns.bl,.hero-ferns.br{bottom:-4px;width:min(31vw,27vh,320px);aspect-ratio:200/520}
-.hero-ferns.tl,.hero-ferns.tr{top:0;width:min(32vw,22vh,240px);aspect-ratio:200/260;animation-delay:.25s}
-.hero-ferns.bl,.hero-ferns.tl{left:0}
-.hero-ferns.br,.hero-ferns.tr{right:0;scale:-1 1}
-.hero-ferns.br{animation-delay:.12s}
-.hero-ferns .frond-group{transform-box:fill-box;animation:sway 9s ease-in-out infinite alternate}
-.hero-ferns.bl .frond-group,.hero-ferns.br .frond-group{transform-origin:0 100%}
-.hero-ferns.tl .frond-group,.hero-ferns.tr .frond-group{transform-origin:0 0;animation-duration:11s}
-@keyframes fern-in{from{opacity:0;transform:translateY(28px)}}
-@keyframes sway{from{rotate:-1deg}to{rotate:1.2deg}}
-.ferns .f1{fill:var(--fern-1)}
-.ferns .f2{fill:var(--fern-2)}
-.ferns .f3{fill:var(--fern-3)}
-.ferns .stem{fill:none;stroke-width:1.2;stroke-linecap:round}
-.ferns .f1.stem{stroke:var(--fern-1)}.ferns .f2.stem{stroke:var(--fern-2)}.ferns .f3.stem{stroke:var(--fern-3)}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 55% 50% at center,color-mix(in srgb,var(--paper) 55%,transparent) 15%,transparent 75%);pointer-events:none}
+.confetti{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.petal{position:absolute;width:var(--s);height:calc(var(--s) * .72);border-radius:70% 30% 70% 30%;background:var(--petal);opacity:.55;
+  rotate:var(--r);animation:drift var(--t) ease-in-out var(--d) infinite alternate}
+.sparkle{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:var(--sparkle);box-shadow:0 0 6px var(--sparkle);
+  opacity:.25;animation:twinkle var(--t) ease-in-out var(--d) infinite alternate}
+@keyframes drift{to{translate:var(--dx) var(--dy);rotate:calc(var(--r) + 40deg)}}
+@keyframes twinkle{to{opacity:.85}}
 .hero-card{position:relative;z-index:2;text-align:center;max-width:620px}
 .hero .pre{color:var(--muted);font-size:16px;margin:0 0 12px}
 .hero h1{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(58px,14vw,128px);line-height:.95;margin:0;letter-spacing:-.01em}
 .hero h1 .amp{display:block;font-size:.45em;color:var(--gold);margin:6px 0}
-.hero .date{font-family:var(--serif);font-size:clamp(20px,4vw,26px);margin:24px 0 4px}
+.hero .rule{display:flex;align-items:center;justify-content:center;gap:12px;margin:22px auto 14px;color:var(--gold);font-size:14px}
+.hero .rule::before,.hero .rule::after{content:"";width:clamp(48px,10vw,90px);height:1px;background:currentColor;opacity:.6}
+.hero .date{font-family:var(--serif);font-size:clamp(20px,4vw,26px);margin:0 0 4px}
 .hero .place{color:var(--muted);margin:0}
-.count{display:flex;justify-content:center;gap:clamp(14px,4vw,32px);margin:32px 0 28px}
-.count div{min-width:58px}
-.count b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(30px,7vw,44px);line-height:1}
+.count{display:flex;justify-content:center;gap:clamp(8px,2.5vw,16px);margin:28px 0 26px}
+.count div{min-width:clamp(72px,18vw,104px);padding:12px 6px 8px;border-radius:14px;
+  background:color-mix(in srgb,var(--surface) 55%,transparent);border:1px solid color-mix(in srgb,var(--gold) 25%,transparent);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.count b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(30px,7vw,44px);line-height:1.1}
 .count small{color:var(--muted);font-size:13px}
 .btn{display:inline-block;font:inherit;font-weight:500;font-size:15px;padding:13px 26px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);text-decoration:none;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--ink)}
+.hero .btn{box-shadow:0 8px 22px color-mix(in srgb,var(--ink) 20%,transparent)}
 
 /* Sections */
 section.s{max-width:760px;margin:0 auto;padding:80px 20px;border-bottom:1px solid var(--line)}
@@ -138,7 +133,7 @@ footer .sig{font-family:var(--serif);font-style:italic;font-size:30px;color:var(
 
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
-  .hero-ferns,.hero-ferns .frond-group{animation:none}
+  .petal,.sparkle{animation:none}
 }
 @media (max-width:520px){
   .program li{grid-template-columns:76px 1fr}
@@ -160,6 +155,7 @@ footer .sig{font-family:var(--serif);font-style:italic;font-size:30px;color:var(
 .codeform{display:flex;gap:10px;flex-wrap:wrap;max-width:520px}
 .codeform label{flex:1;min-width:200px}
 .codeform input{text-transform:uppercase;letter-spacing:.12em;font-variant-numeric:tabular-nums}
+.codeform input::placeholder{text-transform:none;letter-spacing:normal}
 .codeform .btn{align-self:end}
 .notice{border-left:3px solid var(--gold);padding:4px 0 4px 16px;margin:0 0 20px}
 .loading{color:var(--muted)}
