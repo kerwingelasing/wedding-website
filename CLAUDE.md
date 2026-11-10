@@ -29,7 +29,7 @@ Keep secrets out of the repo. Firebase web config can live in `src/firebase.js`;
 - `rsvps/{code}`: `{ attending: bool, seats: number, phone, message, submittedAt }`. Doc ID matches the invite code.
 - `admins/{uid}`: presence of doc marks an admin.
 - `config/site`: `{ deadline, theme }`: the RSVP deadline (rules enforce it) and the site look picked on the dashboard (`blush`, `golden`, or `garden`; see `src/looks.js`).
-- `config/content`: everything guests see (names, date, venues, story, program, entourage, attire, FAQ, contact). The couple edits it on the dashboard's Wedding details tab; `src/content.js` holds the defaults used until it's saved, and the link-preview title baked in at build time.
+- `config/content`: everything guests see (names, date, venues, story, program, entourage, attire, FAQ, contact). The couple edits it on the dashboard's Wedding details tab; `src/content.js` holds the defaults used until it's saved. Link previews (Messenger, Viber) can't run JavaScript, so `vite build` reads the live `config/content` and writes the names, date, and place into the HTML; previews change only after a deploy (falls back to the defaults if Firestore is unreachable).
 
 ## RSVP flow
 

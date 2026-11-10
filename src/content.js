@@ -1,6 +1,6 @@
 // Default wedding details. The couple edits the live copy from the dashboard (Wedding details),
-// which is saved to Firestore at config/content. These defaults are used until that doc exists,
-// and for the link-preview title baked into the HTML at build time (see vite.config.js).
+// which is saved to Firestore at config/content. These defaults are used until that doc exists.
+// Link previews use the live doc, read at build time (see vite.config.js).
 // Lists are arrays of objects, not arrays of arrays: Firestore can't store nested arrays.
 // Times are Philippine time (+08:00).
 

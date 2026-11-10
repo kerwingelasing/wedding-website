@@ -211,9 +211,14 @@ async function save(e) {
   if (err) return;
   $('d-save').disabled = true;
   try {
+    // Shared-link previews (Messenger, Viber) are written into the page at deploy time.
+    const previewChanged = c.couple.first !== lastSaved.couple.first || c.couple.second !== lastSaved.couple.second
+      || c.ceremonyStart !== lastSaved.ceremonyStart || c.place !== lastSaved.place;
     await setDoc(doc(db, 'config', 'content'), { ...c, updatedAt: serverTimestamp() });
     setDirty(false);
-    toast('Wedding details saved. Guests see them now.');
+    toast(previewChanged
+      ? 'Saved. Guests see it now; shared-link previews update after the next deploy.'
+      : 'Wedding details saved. Guests see them now.');
   } catch (ex) {
     $('d-err').textContent = friendlyError(ex);
   } finally {
