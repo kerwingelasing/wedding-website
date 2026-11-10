@@ -1,6 +1,6 @@
-/* Opening scene: capiz shutters tied with a satin bow. Tap to untie, the shutters swing open
-   onto the hero. Shown once per browser session; html.intro-on is set by the inline script in
-   index.html before first paint so the site never flashes underneath. */
+/* Opening scene: two watercolor doors with ferns, tied with a satin bow. Tap to untie, the doors
+   swing open onto the hero. Shown once per browser session; html.intro-on is set by the inline
+   script in index.html before first paint so the site never flashes underneath. */
 .intro{display:none}
 html.intro-on .intro{display:block}
 html.intro-on body{overflow:hidden}
@@ -9,32 +9,66 @@ html.intro-on body{overflow:hidden}
   position:fixed;inset:0;z-index:50;cursor:pointer;
   perspective:250vw;perspective-origin:50% 45%;
   -webkit-tap-highlight-color:transparent;
+  --paper:#F7F5EE;
+  --wash-sage:rgba(143,168,143,.5);
+  --wash-fern:rgba(79,111,91,.3);
+  --wash-champagne:rgba(230,216,189,.85);
+  --fern-1:rgba(79,111,91,.55);
+  --fern-2:rgba(143,168,143,.6);
+  --fern-3:rgba(79,111,91,.3);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .intro{
+    --paper:#131B17;
+    --wash-sage:rgba(143,176,154,.2);
+    --wash-fern:rgba(79,111,91,.45);
+    --wash-champagne:rgba(205,170,110,.13);
+    --fern-1:rgba(143,176,154,.42);
+    --fern-2:rgba(79,111,91,.75);
+    --fern-3:rgba(143,176,154,.2);
+  }
+}
+:root[data-theme="dark"] .intro{
+  --paper:#131B17;--wash-sage:rgba(143,176,154,.2);--wash-fern:rgba(79,111,91,.45);--wash-champagne:rgba(205,170,110,.13);
+  --fern-1:rgba(143,176,154,.42);--fern-2:rgba(79,111,91,.75);--fern-3:rgba(143,176,154,.2);
 }
 
-/* Shutters */
+/* Doors */
 .door{position:absolute;top:0;bottom:0;width:50.5%;transform-style:preserve-3d;
   transition:transform 1.5s cubic-bezier(.55,.05,.2,1)}
 .door.left{left:0;transform-origin:left center}
 .door.right{right:0;transform-origin:right center}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+/* One watercolor wash spread across both doors: each door shows its half of a 200%-wide canvas. */
 .face.front{
-  --cell:46px;
   background:
-    radial-gradient(ellipse at 50% 42%,transparent 40%,color-mix(in srgb,var(--ink) 7%,transparent) 100%),
-    linear-gradient(var(--capiz-line) 3px,transparent 3px) 0 0/var(--cell) var(--cell),
-    linear-gradient(90deg,var(--capiz-line) 3px,transparent 3px) 0 0/var(--cell) var(--cell),
-    radial-gradient(circle at 60% 40%,var(--capiz) 0,transparent 65%) 0 0/var(--cell) var(--cell),
-    var(--bg);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/180px 180px,
+    radial-gradient(ellipse 30% 26% at 7% 94%,var(--wash-sage),transparent),
+    radial-gradient(ellipse 34% 22% at 93% 98%,var(--wash-fern),transparent),
+    radial-gradient(ellipse 40% 18% at 50% 104%,var(--wash-sage),transparent),
+    radial-gradient(ellipse 34% 26% at 88% 6%,var(--wash-champagne),transparent),
+    radial-gradient(ellipse 26% 18% at 10% 4%,var(--wash-champagne),transparent),
+    var(--paper);
+  background-size:180px 180px,200% 100%,200% 100%,200% 100%,200% 100%,200% 100%;
+  background-repeat:repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
 }
-.door.left .face.front{background-position:0 0,right -3px top 0,right -3px top 0,right -3px top 0,0 0;box-shadow:inset -1px 0 0 color-mix(in srgb,var(--gold) 55%,transparent)}
-.door.right .face.front{background-position:0 0,left 0 top 0,left 0 top 0,left 0 top 0,0 0;box-shadow:inset 1px 0 0 color-mix(in srgb,var(--gold) 55%,transparent)}
-/* Thin gold frame inside each shutter */
-.face.front::before{content:"";position:absolute;inset:14px;border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);border-radius:2px}
-.door.left .face.front::before{right:10px}
-.door.right .face.front::before{left:10px}
+.door.left .face.front{background-position:0 0,left top,left top,left top,left top,left top;box-shadow:inset -1px 0 0 color-mix(in srgb,var(--gold) 45%,transparent)}
+.door.right .face.front{background-position:0 0,right top,right top,right top,right top,right top;box-shadow:inset 1px 0 0 color-mix(in srgb,var(--gold) 45%,transparent)}
 .face.back{transform:rotateY(180deg);background:linear-gradient(90deg,#B89766,#E6D8BD 55%,#D9C4A0)}
 
-/* Words on the shutters */
+/* Ferns, drawn by intro.js. The right door mirrors the left. */
+.ferns{position:absolute;left:0;width:100%;pointer-events:none}
+.ferns.bottom{bottom:0;height:62%}
+.ferns.top{top:0;height:30%}
+.door.right .ferns{transform:scaleX(-1)}
+.ferns .f1{fill:var(--fern-1)}
+.ferns .f2{fill:var(--fern-2)}
+.ferns .f3{fill:var(--fern-3)}
+.ferns path{stroke:none}
+.ferns .stem{fill:none;stroke-width:1.2;stroke-linecap:round}
+.ferns .f1.stem{stroke:var(--fern-1)}.ferns .f2.stem{stroke:var(--fern-2)}.ferns .f3.stem{stroke:var(--fern-3)}
+
+/* Words on the doors */
 .intro-text{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 13vh);text-align:center;padding:0 24px;
   transition:opacity .5s ease,transform .6s ease}
 .intro-pre{color:var(--muted);font-size:15px;margin:0 auto 14px;max-width:30ch}
@@ -43,7 +77,8 @@ html.intro-on body{overflow:hidden}
 .intro-names:empty{animation:none}
 @keyframes names-in{from{opacity:0}}
 .intro-names .amp{display:block;font-size:.45em;color:var(--gold);margin:4px 0}
-.intro-hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);text-align:center;margin:0 auto;
+.intro-hint{position:absolute;left:50%;translate:-50% 0;width:max-content;bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);text-align:center;margin:0;
+  padding:6px 14px;border-radius:999px;background:color-mix(in srgb,var(--paper) 82%,transparent);
   color:var(--muted);font-size:14px;transition:opacity .4s ease;animation:hint 2.4s ease-in-out 1.2s infinite}
 @keyframes hint{50%{opacity:.45}}
 
@@ -80,7 +115,7 @@ html.intro-on body{overflow:hidden}
 
 #top:focus{outline:none}
 
-/* The hero waits behind the shutters, then rises into place */
+/* The hero waits behind the doors, then rises into place */
 .hero-card{transition:opacity .9s ease .35s,transform .9s ease .35s}
 html.intro-on .hero-card{opacity:0;transform:translateY(16px)}
 html.intro-on .capiz span{animation-play-state:paused}
