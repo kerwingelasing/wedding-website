@@ -9,7 +9,7 @@ import { content, coupleNames, fullDate, mergeContent, namesOf } from './content
 import { escapeHtml as esc, generateCode, inviteLink } from './codes.js';
 import { parseInviteCsv } from './csv.js';
 import { exportXlsx, replyLabel } from './export.js';
-import { DEFAULT_LOOK, LOOKS, isLook } from './looks.js';
+import { DEFAULT_LOOK, LOOKS, applyLook, isLook } from './looks.js';
 import { hasUnsavedDetails, initDetails, startDetails, stopDetails } from './details-editor.js';
 
 const $ = (id) => document.getElementById(id);
@@ -69,6 +69,10 @@ $('emu-note').hidden = !useEmulators;
 // config/content is public, so the login screen can show the couple's current names.
 getDoc(doc(db, 'config', 'content'))
   .then((snap) => { if (snap.exists()) showNames(snap.data()); })
+  .catch(() => {});
+// config/site is public too: dress the dashboard, sign-in screen included, in the site's look.
+getDoc(doc(db, 'config', 'site'))
+  .then((snap) => useLook(snap.data()?.theme))
   .catch(() => {});
 
 function showNames(c) {
@@ -557,8 +561,17 @@ $('look-options').insertAdjacentHTML('beforeend', LOOKS.map((l) => `
     <span class="look-sw">${l.swatches.map((c) => `<i style="background:${c}"></i>`).join('')}</span>
   </label>`).join(''));
 
+// The dashboard follows the site's saved look. Remembered in this browser so the next visit
+// doesn't flash the default first (the inline script in admin/index.html reads it).
+function useLook(id) {
+  const look = isLook(id) ? id : DEFAULT_LOOK;
+  applyLook(look);
+  try { localStorage.setItem('site-look', look); } catch { /* ignore */ }
+}
+
 function showLook(id) {
   savedLook = isLook(id) ? id : DEFAULT_LOOK;
+  useLook(savedLook);
   $('look-label').textContent = LOOKS.find((l) => l.id === savedLook).name;
   for (const el of document.querySelectorAll('[data-now]')) el.hidden = el.dataset.now !== savedLook;
   // Don't undo a choice the couple is in the middle of making.

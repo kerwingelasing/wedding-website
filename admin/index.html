@@ -12,7 +12,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/styles.css">
+<link rel="stylesheet" href="/src/looks.css">
 <link rel="stylesheet" href="/src/admin.css">
+<script>
+  // Apply the site look this browser last saw before first paint; admin.js confirms it from Firestore.
+  try { var look = localStorage.getItem('site-look'); if (/^(blush|golden|garden)$/.test(look)) document.documentElement.dataset.look = look; } catch (e) {}
+</script>
 </head>
 <body>
 

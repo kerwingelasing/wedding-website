@@ -61,7 +61,7 @@ Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at recepti
 ## Design rules
 
 - Keep the prototype's sections, layout, and copy style. Bodoni Moda (display) + Figtree (body).
-- Three site looks, switchable on the dashboard (Site look), each with light and dark mode and matching opening doors. Default is "champagne and blush" (`styles.css`, `intro.css`): blush/champagne glows, drifting petals, gold sparkles; plum ink #3A2A2C, ivory #FBF6EF, gold #B08A4F, rose #9A5560; dark is candlelit rose #221A1C. "Golden hour over Taal" and "garden arch" live in `looks.css`. Preview any look with `/?look=<id>`; add a new look in `src/looks.js`, `looks.css`, and the list in `firestore.rules`.
+- Three site looks, switchable on the dashboard (Site look), each with light and dark mode and matching opening doors. Default is "champagne and blush" (`styles.css`, `intro.css`): blush/champagne glows, drifting petals, gold sparkles; plum ink #3A2A2C, ivory #FBF6EF, gold #B08A4F, rose #9A5560; dark is candlelit rose #221A1C. "Golden hour over Taal" and "garden arch" live in `looks.css`. The admin dashboard follows the saved look too. Preview any look with `/?look=<id>`; add a new look in `src/looks.js`, `looks.css`, and the list in `firestore.rules`.
 - Mobile first; test at 360px wide
 - Support light and dark mode via CSS variables
 - Respect `prefers-reduced-motion`
