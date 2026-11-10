@@ -5,7 +5,7 @@ import {
 } from './content.js';
 import { escapeHtml as esc } from './codes.js';
 import { initRsvp } from './rsvp.js';
-import { initIntro, initReveals, setIntroNames } from './intro.js';
+import { initIntro, initReveals } from './intro.js';
 import { drawFerns } from './ferns.js';
 
 initIntro();
@@ -44,7 +44,6 @@ function render(c, deadline) {
   document.title = `${c.couple.first} and ${c.couple.second}'s Wedding`;
 
   // Hero
-  setIntroNames(c);
   $('monogram').textContent = c.couple.monogram;
   $('hero-pre').textContent = c.invitationLine;
   $('hero-names').innerHTML = `${esc(c.couple.first)}<span class="amp">&amp;</span>${esc(c.couple.second)}`;

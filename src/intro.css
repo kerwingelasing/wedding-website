@@ -32,12 +32,11 @@ html.intro-on body{overflow:hidden}
 }
 .door.left .face.front{background-position:0 0,left top,left top,left top,left top,left top}
 .door.right .face.front{background-position:0 0,right top,right top,right top,right top,right top}
-/* The seam where the doors meet. It fades out behind the names and returns below the ribbon. */
-.face.front::after{content:"";position:absolute;top:0;bottom:0;width:1px;
-  background:linear-gradient(to bottom,var(--seam) 0,transparent 9%,transparent calc(var(--ribbon-y,58vh) - 30px),var(--seam) calc(var(--ribbon-y,58vh) + 50px))}
+/* The seam where the doors meet */
+.face.front::after{content:"";position:absolute;top:0;bottom:0;width:1px;background:var(--seam)}
 .door.left .face.front::after{right:0}
 .door.right .face.front::after{left:0}
-.intro{--seam:color-mix(in srgb,var(--gold) 45%,transparent)}
+.intro{--seam:color-mix(in srgb,var(--gold) 45%,transparent);--bow:clamp(220px,min(78vw,52vh),460px)}
 .face.back{transform:rotateY(180deg);background:linear-gradient(90deg,#B89766,#E6D8BD 55%,#D9C4A0)}
 
 /* Ferns, drawn by ferns.js (colors in styles.css). The right door mirrors the left. */
@@ -46,31 +45,22 @@ html.intro-on body{overflow:hidden}
 .intro .ferns.top{top:0;height:30%}
 .door.right .ferns{transform:scaleX(-1)}
 
-/* Words on the doors */
-.intro-text{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 13vh);text-align:center;padding:0 24px;
-  transition:opacity .5s ease,transform .6s ease}
-.intro-pre{color:var(--muted);font-size:15px;margin:0 auto 14px;max-width:34ch}
-.intro-names{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(40px,min(13vw,11vh),96px);line-height:.95;margin:0;color:var(--ink)}
-.intro-names{animation:names-in .6s ease both}
-.intro-names:empty{animation:none}
-@keyframes names-in{from{opacity:0}}
-.intro-names .amp{display:block;font-size:.45em;color:var(--gold);margin:4px 0}
 .intro-hint{position:absolute;left:50%;translate:-50% 0;width:max-content;bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);text-align:center;margin:0;
   padding:6px 14px;border-radius:999px;background:color-mix(in srgb,var(--paper) 82%,transparent);
   color:var(--muted);font-size:14px;transition:opacity .4s ease;animation:hint 2.4s ease-in-out 1.2s infinite}
 @keyframes hint{50%{opacity:.45}}
 
 /* Ribbon and bow */
-.ribbon{position:absolute;left:0;right:0;top:var(--ribbon-y,58vh);height:0;padding:0;border:0;background:none;cursor:pointer;color:inherit}
+.ribbon{position:absolute;left:0;right:0;top:50%;height:0;padding:0;border:0;background:none;cursor:pointer;color:inherit}
 .ribbon:focus-visible{outline:none}
 .ribbon:focus-visible .bow{outline:2px solid var(--gold);outline-offset:6px;border-radius:12px}
-.band{position:absolute;top:-12px;height:24px;
+.band{position:absolute;top:calc(var(--bow) * -.0525);height:calc(var(--bow) * .105);
   background:linear-gradient(180deg,#F6EFE3,#E6D8BD 45%,#D6C09A 100%);
   box-shadow:0 1px 0 rgba(156,122,67,.35),0 -1px 0 rgba(156,122,67,.2),0 6px 14px rgba(30,59,48,.12);
   transition:transform .7s cubic-bezier(.5,0,.2,1),opacity .6s ease}
 .band.l{left:0;right:50%}
 .band.r{left:50%;right:0}
-.bow{position:absolute;left:50%;top:0;width:clamp(140px,min(52vw,45vh),260px);transform:translate(-50%,-44%);
+.bow{position:absolute;left:50%;top:0;width:var(--bow);transform:translate(-50%,-44%);
   filter:drop-shadow(0 8px 12px rgba(30,59,48,.18));transition:transform .2s ease}
 .ribbon:hover .bow{transform:translate(-50%,-44%) scale(1.03)}
 .bow .loop,.bow .tail,.bow .knot{transform-box:fill-box;transition:transform .6s cubic-bezier(.5,0,.2,1),opacity .45s ease}
@@ -85,7 +75,6 @@ html.intro-on body{overflow:hidden}
 .intro.untie .bow .loop.r{transform:scale(.35) rotate(25deg);opacity:0}
 .intro.untie .bow .knot{transform:scale(.4);opacity:0}
 .intro.untie .bow .tail{transform:translateY(40%) rotate(4deg);opacity:0}
-.intro.untie .intro-text{opacity:0;transform:translateY(-10px)}
 .intro.untie .intro-hint{opacity:0;animation:none}
 .intro.open .door.left{transform:rotateY(-108deg)}
 .intro.open .door.right{transform:rotateY(108deg)}
@@ -103,7 +92,7 @@ html.intro-on .hero-ferns,html.intro-on .hero-ferns .frond-group{animation-play-
 .reveal.in{opacity:1;transform:none}
 
 @media (prefers-reduced-motion: reduce){
-  .door,.band,.bow .loop,.bow .tail,.bow .knot,.intro-text{transition:none}
+  .door,.band,.bow .loop,.bow .tail,.bow .knot{transition:none}
   .intro{transition:opacity .4s ease}
   .intro.open{opacity:0}
   .intro.open .door.left,.intro.open .door.right{transform:none}

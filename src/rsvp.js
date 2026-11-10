@@ -70,7 +70,6 @@ async function lookup(code, { fromLink = false } = {}) {
 
   const data = snap.data();
   invite = { code, name: data.name, maxSeats: data.maxSeats };
-  document.dispatchEvent(new CustomEvent('invite-found', { detail: { name: invite.name } }));
   store.set(CODE_KEY, code);
   const url = new URL(location.href);
   if (url.searchParams.get('code') !== code) {
