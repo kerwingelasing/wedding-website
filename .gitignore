@@ -6,3 +6,6 @@ dist/
 emulator-data/
 *-debug.log
 .firebase/
+.claude/
+firestore-debug.log
+ui-debug.log
