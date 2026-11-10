@@ -60,7 +60,7 @@ Prenup photo gallery, email/SMS notification on new RSVP, QR check-in at recepti
 
 ## Design rules
 
-- Keep the prototype's style: capiz-window lattice hero, Bodoni Moda (display) + Figtree (body), palette ink green #1E3B30, fern #4F6F5B, gold #9C7A43, pearl #F3F4EF
+- Keep the prototype's style (the hero now uses a sage watercolor wash with ferns instead of the capiz lattice, matching the opening scene): Bodoni Moda (display) + Figtree (body), palette ink green #1E3B30, fern #4F6F5B, gold #9C7A43, pearl #F3F4EF
 - Mobile first; test at 360px wide
 - Support light and dark mode via CSS variables
 - Respect `prefers-reduced-motion`

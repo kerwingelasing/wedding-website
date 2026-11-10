@@ -1,6 +1,9 @@
 :root{
   --bg:#F3F4EF; --surface:#FFFFFF; --ink:#1E3B30; --muted:#5C6B62; --line:#D5D9CF;
-  --gold:#9C7A43; --leaf:#4F6F5B; --capiz:rgba(255,255,255,.55); --capiz-line:rgba(30,59,48,.10);
+  --gold:#9C7A43; --leaf:#4F6F5B; 
+  /* Watercolor wash and ferns (hero and opening scene) */
+  --paper:#F7F5EE; --wash-sage:rgba(143,168,143,.5); --wash-fern:rgba(79,111,91,.3); --wash-champagne:rgba(230,216,189,.85);
+  --fern-1:rgba(70,103,83,.8); --fern-2:rgba(118,150,121,.72); --fern-3:rgba(79,111,91,.4);
   --serif:"Bodoni Moda", "Didot", Georgia, serif;
   --sans:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   box-sizing:border-box;
@@ -10,12 +13,16 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#121A16; --surface:#1A241F; --ink:#E8ECE6; --muted:#A3B0A7; --line:#2E3B34;
-    --gold:#CDAA6E; --leaf:#8FB09A; --capiz:rgba(255,255,255,.04); --capiz-line:rgba(232,236,230,.08);
+    --gold:#CDAA6E; --leaf:#8FB09A; 
+    --paper:#131B17; --wash-sage:rgba(143,176,154,.2); --wash-fern:rgba(79,111,91,.45); --wash-champagne:rgba(205,170,110,.13);
+    --fern-1:rgba(143,176,154,.42); --fern-2:rgba(79,111,91,.75); --fern-3:rgba(143,176,154,.2);
   }
 }
 :root[data-theme="dark"]{
   --bg:#121A16; --surface:#1A241F; --ink:#E8ECE6; --muted:#A3B0A7; --line:#2E3B34;
-  --gold:#CDAA6E; --leaf:#8FB09A; --capiz:rgba(255,255,255,.04); --capiz-line:rgba(232,236,230,.08);
+  --gold:#CDAA6E; --leaf:#8FB09A; 
+    --paper:#131B17; --wash-sage:rgba(143,176,154,.2); --wash-fern:rgba(79,111,91,.45); --wash-champagne:rgba(205,170,110,.13);
+    --fern-1:rgba(143,176,154,.42); --fern-2:rgba(79,111,91,.75); --fern-3:rgba(143,176,154,.2);
 }
 *,*::before,*::after{box-sizing:inherit}
 /* Chrome wraps <details> content in ::details-content, which the rule above doesn't reach. Separate rule so older browsers don't drop the one above. */
@@ -35,13 +42,33 @@ nav .mono{font-family:var(--serif);font-style:italic;font-size:20px;white-space:
 nav a.l{font-size:14px;color:var(--muted);text-decoration:none;white-space:nowrap}
 nav a.l:hover{color:var(--ink)}
 
-/* Hero with capiz window lattice */
-.hero{position:relative;min-height:88vh;display:grid;place-items:center;overflow:hidden;padding:48px 20px}
-.capiz{position:absolute;inset:-2px;display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));grid-auto-rows:56px;gap:6px;padding:6px;background:var(--capiz-line)}
-.capiz span{background:var(--capiz);border-radius:2px;opacity:0;animation:glow .9s ease forwards}
-@keyframes glow{to{opacity:1}}
-.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,var(--bg) 30%,color-mix(in srgb,var(--bg) 30%,transparent) 75%);pointer-events:none}
-.hero-card{position:relative;z-index:1;text-align:center;max-width:620px}
+/* Hero: watercolor wash with ferns growing from the corners (drawn by ferns.js) */
+.hero{position:relative;min-height:88vh;display:grid;place-items:center;overflow:hidden;padding:48px 20px;
+  background:
+    radial-gradient(ellipse 34% 30% at 0% 100%,var(--wash-sage),transparent),
+    radial-gradient(ellipse 34% 30% at 100% 100%,var(--wash-fern),transparent),
+    radial-gradient(ellipse 50% 22% at 50% 108%,var(--wash-sage),transparent),
+    radial-gradient(ellipse 36% 30% at 100% 0%,var(--wash-champagne),transparent),
+    radial-gradient(ellipse 30% 24% at 0% 0%,var(--wash-champagne),transparent),
+    var(--paper)}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at center,color-mix(in srgb,var(--paper) 70%,transparent) 20%,transparent 75%);pointer-events:none}
+.hero-ferns{position:absolute;z-index:1;pointer-events:none;height:auto;animation:fern-in 1.8s cubic-bezier(.2,.6,.2,1) both}
+.hero-ferns.bl,.hero-ferns.br{bottom:-4px;width:min(31vw,27vh,320px);aspect-ratio:200/520}
+.hero-ferns.tl,.hero-ferns.tr{top:0;width:min(32vw,22vh,240px);aspect-ratio:200/260;animation-delay:.25s}
+.hero-ferns.bl,.hero-ferns.tl{left:0}
+.hero-ferns.br,.hero-ferns.tr{right:0;scale:-1 1}
+.hero-ferns.br{animation-delay:.12s}
+.hero-ferns .frond-group{transform-box:fill-box;animation:sway 9s ease-in-out infinite alternate}
+.hero-ferns.bl .frond-group,.hero-ferns.br .frond-group{transform-origin:0 100%}
+.hero-ferns.tl .frond-group,.hero-ferns.tr .frond-group{transform-origin:0 0;animation-duration:11s}
+@keyframes fern-in{from{opacity:0;transform:translateY(28px)}}
+@keyframes sway{from{rotate:-1deg}to{rotate:1.2deg}}
+.ferns .f1{fill:var(--fern-1)}
+.ferns .f2{fill:var(--fern-2)}
+.ferns .f3{fill:var(--fern-3)}
+.ferns .stem{fill:none;stroke-width:1.2;stroke-linecap:round}
+.ferns .f1.stem{stroke:var(--fern-1)}.ferns .f2.stem{stroke:var(--fern-2)}.ferns .f3.stem{stroke:var(--fern-3)}
+.hero-card{position:relative;z-index:2;text-align:center;max-width:620px}
 .hero .pre{color:var(--muted);font-size:16px;margin:0 0 12px}
 .hero h1{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(58px,14vw,128px);line-height:.95;margin:0;letter-spacing:-.01em}
 .hero h1 .amp{display:block;font-size:.45em;color:var(--gold);margin:6px 0}
@@ -108,7 +135,7 @@ footer .sig{font-family:var(--serif);font-style:italic;font-size:30px;color:var(
 
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
-  .capiz span{animation:none;opacity:1}
+  .hero-ferns,.hero-ferns .frond-group{animation:none}
 }
 @media (max-width:520px){
   .program li{grid-template-columns:76px 1fr}

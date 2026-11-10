@@ -6,6 +6,7 @@ import {
 import { escapeHtml as esc } from './codes.js';
 import { initRsvp } from './rsvp.js';
 import { initIntro, initReveals, setIntroNames } from './intro.js';
+import { drawFerns } from './ferns.js';
 
 initIntro();
 
@@ -24,11 +25,9 @@ function withTimeout(promise, ms) {
   return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))]);
 }
 
-// Capiz lattice
-$('capiz').innerHTML = Array.from(
-  { length: 180 },
-  () => `<span style="animation-delay:${(Math.random() * 900) | 0}ms"></span>`,
-).join('');
+// Hero ferns
+drawFerns('.hero-ferns.bl, .hero-ferns.br', 'bottom');
+drawFerns('.hero-ferns.tl, .hero-ferns.tr', 'top');
 
 // Countdown
 let target = new Date(defaults.ceremonyStart).getTime();

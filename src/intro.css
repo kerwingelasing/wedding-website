@@ -9,28 +9,6 @@ html.intro-on body{overflow:hidden}
   position:fixed;inset:0;z-index:50;cursor:pointer;
   perspective:250vw;perspective-origin:50% 45%;
   -webkit-tap-highlight-color:transparent;
-  --paper:#F7F5EE;
-  --wash-sage:rgba(143,168,143,.5);
-  --wash-fern:rgba(79,111,91,.3);
-  --wash-champagne:rgba(230,216,189,.85);
-  --fern-1:rgba(79,111,91,.55);
-  --fern-2:rgba(143,168,143,.6);
-  --fern-3:rgba(79,111,91,.3);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .intro{
-    --paper:#131B17;
-    --wash-sage:rgba(143,176,154,.2);
-    --wash-fern:rgba(79,111,91,.45);
-    --wash-champagne:rgba(205,170,110,.13);
-    --fern-1:rgba(143,176,154,.42);
-    --fern-2:rgba(79,111,91,.75);
-    --fern-3:rgba(143,176,154,.2);
-  }
-}
-:root[data-theme="dark"] .intro{
-  --paper:#131B17;--wash-sage:rgba(143,176,154,.2);--wash-fern:rgba(79,111,91,.45);--wash-champagne:rgba(205,170,110,.13);
-  --fern-1:rgba(143,176,154,.42);--fern-2:rgba(79,111,91,.75);--fern-3:rgba(143,176,154,.2);
 }
 
 /* Doors */
@@ -56,17 +34,11 @@ html.intro-on body{overflow:hidden}
 .door.right .face.front{background-position:0 0,right top,right top,right top,right top,right top;box-shadow:inset 1px 0 0 color-mix(in srgb,var(--gold) 45%,transparent)}
 .face.back{transform:rotateY(180deg);background:linear-gradient(90deg,#B89766,#E6D8BD 55%,#D9C4A0)}
 
-/* Ferns, drawn by intro.js. The right door mirrors the left. */
-.ferns{position:absolute;left:0;width:100%;pointer-events:none}
-.ferns.bottom{bottom:0;height:62%}
-.ferns.top{top:0;height:30%}
+/* Ferns, drawn by ferns.js (colors in styles.css). The right door mirrors the left. */
+.intro .ferns{position:absolute;left:0;width:100%;pointer-events:none}
+.intro .ferns.bottom{bottom:0;height:62%}
+.intro .ferns.top{top:0;height:30%}
 .door.right .ferns{transform:scaleX(-1)}
-.ferns .f1{fill:var(--fern-1)}
-.ferns .f2{fill:var(--fern-2)}
-.ferns .f3{fill:var(--fern-3)}
-.ferns path{stroke:none}
-.ferns .stem{fill:none;stroke-width:1.2;stroke-linecap:round}
-.ferns .f1.stem{stroke:var(--fern-1)}.ferns .f2.stem{stroke:var(--fern-2)}.ferns .f3.stem{stroke:var(--fern-3)}
 
 /* Words on the doors */
 .intro-text{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 13vh);text-align:center;padding:0 24px;
@@ -118,7 +90,7 @@ html.intro-on body{overflow:hidden}
 /* The hero waits behind the doors, then rises into place */
 .hero-card{transition:opacity .9s ease .35s,transform .9s ease .35s}
 html.intro-on .hero-card{opacity:0;transform:translateY(16px)}
-html.intro-on .capiz span{animation-play-state:paused}
+html.intro-on .hero-ferns,html.intro-on .hero-ferns .frond-group{animation-play-state:paused}
 
 /* Scroll reveals (classes added by intro.js, so content stays visible without JavaScript) */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.6,.2,1)}
