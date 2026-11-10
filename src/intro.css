@@ -1,0 +1,100 @@
+/* Opening scene: capiz shutters tied with a satin bow. Tap to untie, the shutters swing open
+   onto the hero. Shown once per browser session; html.intro-on is set by the inline script in
+   index.html before first paint so the site never flashes underneath. */
+.intro{display:none}
+html.intro-on .intro{display:block}
+html.intro-on body{overflow:hidden}
+
+.intro{
+  position:fixed;inset:0;z-index:50;cursor:pointer;
+  perspective:250vw;perspective-origin:50% 45%;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* Shutters */
+.door{position:absolute;top:0;bottom:0;width:50.5%;transform-style:preserve-3d;
+  transition:transform 1.5s cubic-bezier(.55,.05,.2,1)}
+.door.left{left:0;transform-origin:left center}
+.door.right{right:0;transform-origin:right center}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.front{
+  --cell:46px;
+  background:
+    radial-gradient(ellipse at 50% 42%,transparent 40%,color-mix(in srgb,var(--ink) 7%,transparent) 100%),
+    linear-gradient(var(--capiz-line) 3px,transparent 3px) 0 0/var(--cell) var(--cell),
+    linear-gradient(90deg,var(--capiz-line) 3px,transparent 3px) 0 0/var(--cell) var(--cell),
+    radial-gradient(circle at 60% 40%,var(--capiz) 0,transparent 65%) 0 0/var(--cell) var(--cell),
+    var(--bg);
+}
+.door.left .face.front{background-position:0 0,right -3px top 0,right -3px top 0,right -3px top 0,0 0;box-shadow:inset -1px 0 0 color-mix(in srgb,var(--gold) 55%,transparent)}
+.door.right .face.front{background-position:0 0,left 0 top 0,left 0 top 0,left 0 top 0,0 0;box-shadow:inset 1px 0 0 color-mix(in srgb,var(--gold) 55%,transparent)}
+/* Thin gold frame inside each shutter */
+.face.front::before{content:"";position:absolute;inset:14px;border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);border-radius:2px}
+.door.left .face.front::before{right:10px}
+.door.right .face.front::before{left:10px}
+.face.back{transform:rotateY(180deg);background:linear-gradient(90deg,#B89766,#E6D8BD 55%,#D9C4A0)}
+
+/* Words on the shutters */
+.intro-text{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 13vh);text-align:center;padding:0 24px;
+  transition:opacity .5s ease,transform .6s ease}
+.intro-pre{color:var(--muted);font-size:15px;margin:0 auto 14px;max-width:30ch}
+.intro-names{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(48px,13vw,96px);line-height:.95;margin:0;color:var(--ink)}
+.intro-names{animation:names-in .6s ease both}
+.intro-names:empty{animation:none}
+@keyframes names-in{from{opacity:0}}
+.intro-names .amp{display:block;font-size:.45em;color:var(--gold);margin:4px 0}
+.intro-hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);text-align:center;margin:0 auto;
+  color:var(--muted);font-size:14px;transition:opacity .4s ease;animation:hint 2.4s ease-in-out 1.2s infinite}
+@keyframes hint{50%{opacity:.45}}
+
+/* Ribbon and bow */
+.ribbon{position:absolute;left:0;right:0;top:58%;height:0;padding:0;border:0;background:none;cursor:pointer;color:inherit}
+.ribbon:focus-visible{outline:none}
+.ribbon:focus-visible .bow{outline:2px solid var(--gold);outline-offset:6px;border-radius:12px}
+.band{position:absolute;top:-12px;height:24px;
+  background:linear-gradient(180deg,#F6EFE3,#E6D8BD 45%,#D6C09A 100%);
+  box-shadow:0 1px 0 rgba(156,122,67,.35),0 -1px 0 rgba(156,122,67,.2),0 6px 14px rgba(30,59,48,.12);
+  transition:transform .7s cubic-bezier(.5,0,.2,1),opacity .6s ease}
+.band.l{left:0;right:50%}
+.band.r{left:50%;right:0}
+.bow{position:absolute;left:50%;top:0;width:clamp(180px,52vw,260px);transform:translate(-50%,-44%);
+  filter:drop-shadow(0 8px 12px rgba(30,59,48,.18));transition:transform .2s ease}
+.ribbon:hover .bow{transform:translate(-50%,-44%) scale(1.03)}
+.bow .loop,.bow .tail,.bow .knot{transform-box:fill-box;transition:transform .6s cubic-bezier(.5,0,.2,1),opacity .45s ease}
+.bow .loop.l{transform-origin:100% 60%}
+.bow .loop.r{transform-origin:0 60%}
+.bow .tail{transform-origin:50% 0}
+
+/* Opening sequence */
+.intro.untie .band.l{transform:translateX(-35%);opacity:0}
+.intro.untie .band.r{transform:translateX(35%);opacity:0}
+.intro.untie .bow .loop.l{transform:scale(.35) rotate(-25deg);opacity:0}
+.intro.untie .bow .loop.r{transform:scale(.35) rotate(25deg);opacity:0}
+.intro.untie .bow .knot{transform:scale(.4);opacity:0}
+.intro.untie .bow .tail{transform:translateY(40%) rotate(4deg);opacity:0}
+.intro.untie .intro-text{opacity:0;transform:translateY(-10px)}
+.intro.untie .intro-hint{opacity:0;animation:none}
+.intro.open .door.left{transform:rotateY(-108deg)}
+.intro.open .door.right{transform:rotateY(108deg)}
+.intro.open{pointer-events:none}
+
+#top:focus{outline:none}
+
+/* The hero waits behind the shutters, then rises into place */
+.hero-card{transition:opacity .9s ease .35s,transform .9s ease .35s}
+html.intro-on .hero-card{opacity:0;transform:translateY(16px)}
+html.intro-on .capiz span{animation-play-state:paused}
+
+/* Scroll reveals (classes added by intro.js, so content stays visible without JavaScript) */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.6,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion: reduce){
+  .door,.band,.bow .loop,.bow .tail,.bow .knot,.intro-text{transition:none}
+  .intro{transition:opacity .4s ease}
+  .intro.open{opacity:0}
+  .intro.open .door.left,.intro.open .door.right{transform:none}
+  .intro-hint{animation:none}
+  .hero-card{transition:opacity .4s ease;transform:none !important}
+  .reveal{opacity:1;transform:none;transition:none}
+}

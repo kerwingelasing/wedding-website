@@ -5,6 +5,9 @@ import {
 } from './content.js';
 import { escapeHtml as esc } from './codes.js';
 import { initRsvp } from './rsvp.js';
+import { initIntro, initReveals, setIntroNames } from './intro.js';
+
+initIntro();
 
 const $ = (id) => document.getElementById(id);
 const CACHE_KEY = 'site-content';
@@ -42,6 +45,7 @@ function render(c, deadline) {
   document.title = `${c.couple.first} and ${c.couple.second}'s Wedding`;
 
   // Hero
+  setIntroNames(c);
   $('monogram').textContent = c.couple.monogram;
   $('hero-pre').textContent = c.invitationLine;
   $('hero-names').innerHTML = `${esc(c.couple.first)}<span class="amp">&amp;</span>${esc(c.couple.second)}`;
@@ -114,6 +118,7 @@ async function load() {
 
   const c = mergeContent(saved);
   render(c, deadline);
+  initReveals(); // after the final render, so it tracks the elements that stay
   initRsvp({ db, content: c, deadline, deadlineLabel: fullDate(deadline), thanksLine: `See you on ${monthDay(c.ceremonyStart)}!` });
 }
 

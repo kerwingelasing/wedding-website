@@ -15,8 +15,50 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/styles.css">
+<link rel="stylesheet" href="/src/intro.css">
+<script>
+  // Show the opening scene once per browser session (add ?intro to the URL to see it again).
+  try { if (!sessionStorage.getItem('intro-seen') || new URLSearchParams(location.search).has('intro')) document.documentElement.classList.add('intro-on'); }
+  catch (e) { document.documentElement.classList.add('intro-on'); }
+</script>
 </head>
 <body class="loading-content">
+
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-names">
+  <div class="door left" aria-hidden="true"><div class="face front"></div><div class="face back"></div></div>
+  <div class="door right" aria-hidden="true"><div class="face front"></div><div class="face back"></div></div>
+  <div class="intro-text">
+    <p class="intro-pre" id="intro-pre">You're invited to the wedding of</p>
+    <p class="intro-names" id="intro-names"></p>
+  </div>
+  <button class="ribbon" id="intro-open" type="button" aria-label="Open the invitation">
+    <span class="band l"></span><span class="band r"></span>
+    <svg class="bow" viewBox="0 0 200 150" aria-hidden="true">
+      <defs>
+        <linearGradient id="satin" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FBF6EC"/><stop offset=".5" stop-color="#E9DCC2"/><stop offset="1" stop-color="#D3BC93"/>
+        </linearGradient>
+        <linearGradient id="satin-shade" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#C8AE80"/><stop offset="1" stop-color="#E6D8BD"/>
+        </linearGradient>
+      </defs>
+      <g fill="url(#satin)" stroke="#9C7A43" stroke-opacity=".45" stroke-width="1" stroke-linejoin="round">
+        <path class="tail" d="M95 66 C 86 92, 72 116, 56 142 L 72 137 L 79 148 C 90 120, 99 94, 104 70 Z"/>
+        <path class="tail" d="M105 66 C 114 92, 128 116, 144 142 L 128 137 L 121 148 C 110 120, 101 94, 96 70 Z"/>
+        <g class="loop l">
+          <path d="M100 62 C 74 18, 18 8, 14 46 C 11 76, 62 84, 100 62 Z"/>
+          <path d="M100 62 C 76 44, 44 40, 30 52 C 50 66, 76 70, 100 62 Z" fill="url(#satin-shade)" stroke="none" opacity=".55"/>
+        </g>
+        <g class="loop r">
+          <path d="M100 62 C 126 18, 182 8, 186 46 C 189 76, 138 84, 100 62 Z"/>
+          <path d="M100 62 C 124 44, 156 40, 170 52 C 150 66, 124 70, 100 62 Z" fill="url(#satin-shade)" stroke="none" opacity=".55"/>
+        </g>
+        <rect class="knot" x="88" y="49" width="24" height="26" rx="8"/>
+      </g>
+    </svg>
+  </button>
+  <p class="intro-hint">Tap the ribbon to open</p>
+</div>
 
 <nav aria-label="Sections">
   <div class="inner">
@@ -32,7 +74,7 @@
 </nav>
 
 <main id="site">
-<header class="hero" id="top">
+<header class="hero" id="top" tabindex="-1">
   <div class="capiz" id="capiz" aria-hidden="true"></div>
   <div class="hero-card">
     <p class="pre" id="hero-pre"></p>
