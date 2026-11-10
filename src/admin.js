@@ -5,7 +5,7 @@ import {
   Timestamp, collection, connectFirestoreEmulator, doc, getDoc, getFirestore, onSnapshot, serverTimestamp, setDoc, updateDoc, writeBatch,
 } from 'firebase/firestore';
 import { FIRESTORE_EMULATOR, app, useEmulators } from './firebase.js';
-import { content, coupleNames, namesOf } from './content.js';
+import { content, coupleNames, fullDate, mergeContent, namesOf } from './content.js';
 import { escapeHtml as esc, generateCode, inviteLink } from './codes.js';
 import { parseInviteCsv } from './csv.js';
 import { exportXlsx, replyLabel } from './export.js';
@@ -177,7 +177,15 @@ function startListening() {
       rsvps = new Map(snap.docs.map((d) => [d.id, d.data()]));
       render();
     }, onErr),
-    onSnapshot(doc(db, 'config', 'site'), (snap) => showDeadline(snap.data()?.deadline?.toDate()), onErr),
+    onSnapshot(doc(db, 'config', 'site'), (snap) => {
+      currentDeadline = snap.data()?.deadline?.toDate() || null;
+      showDeadline(currentDeadline);
+    }, onErr),
+    // The wedding date, so the deadline can't be set after it.
+    onSnapshot(doc(db, 'config', 'content'), (snap) => {
+      weddingStart = new Date(mergeContent(snap.exists() ? snap.data() : null).ceremonyStart);
+      showDeadline(currentDeadline);
+    }, onErr),
   ];
 }
 
@@ -497,13 +505,16 @@ $('exportBtn').addEventListener('click', async () => {
 });
 
 // ---------- RSVP deadline ----------
+let currentDeadline = null;
+let weddingStart = new Date(content.ceremonyStart);
+
 const manila = (d) => d.toLocaleString('sv-SE', { timeZone: 'Asia/Manila' }).slice(0, 16).replace(' ', 'T');
 
 function showDeadline(d) {
   if (!d) return void ($('deadline-label').textContent = 'not set');
   $('deadline-label').textContent = d.toLocaleString('en-PH', {
     timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short',
-  }) + (d < new Date() ? ' (closed)' : '');
+  }) + (d >= weddingStart ? ' (after the wedding, please change it)' : d < new Date() ? ' (closed)' : '');
   if (document.activeElement !== $('deadline-input')) $('deadline-input').value = manila(d);
 }
 
@@ -524,6 +535,7 @@ $('deadlineForm').addEventListener('submit', async (e) => {
   const v = $('deadline-input').value;
   if (!v) return toast('Choose a date and time.');
   const d = new Date(`${v}:00+08:00`);
+  if (d >= weddingStart) return toast(`The deadline has to be before the wedding on ${fullDate(weddingStart)}.`);
   try {
     await updateDoc(doc(db, 'config', 'site'), { deadline: Timestamp.fromDate(d) });
     toast('Deadline saved');

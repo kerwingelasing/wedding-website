@@ -30,6 +30,9 @@
 input,select,textarea,button{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+/* Bodoni Moda changes its strokes with size (hairlines nearly vanish on the big names, while the
+   date and countdown look heavier). Pin one optical size so every serif line matches. */
+html{font-optical-sizing:none;font-variation-settings:"opsz" 28}
 img{max-width:100%}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
