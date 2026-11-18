@@ -5,6 +5,8 @@
   /* Hero and opening scene glows, petals and sparkles */
   --paper:#FBF6EF; --glow-blush:#F3D6D2; --glow-champagne:#EFDDBF; --glow-rose:#F2D9D5;
   --petal:#E7B7B1; --sparkle:#C9A15E;
+  /* Soft glow behind the page's sections */
+  --tint-1:rgba(243,214,210,.45); --tint-2:rgba(239,221,191,.45);
   --serif:"Bodoni Moda", "Didot", Georgia, serif;
   --sans:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   box-sizing:border-box;
@@ -16,14 +18,14 @@
     --bg:#221A1C; --surface:#2B2124; --ink:#F6ECE6; --muted:#C9B3AE; --line:#3D3033;
     --gold:#D9B577; --leaf:#E3A9B0;
     --paper:#221A1C; --glow-blush:rgba(190,112,120,.35); --glow-champagne:rgba(217,181,119,.22); --glow-rose:rgba(190,112,120,.28);
-    --petal:#B9737B; --sparkle:#D9B577;
+    --petal:#B9737B; --sparkle:#D9B577; --tint-1:rgba(190,112,120,.14); --tint-2:rgba(217,181,119,.10);
   }
 }
 :root[data-theme="dark"]{
   --bg:#221A1C; --surface:#2B2124; --ink:#F6ECE6; --muted:#C9B3AE; --line:#3D3033;
   --gold:#D9B577; --leaf:#E3A9B0;
   --paper:#221A1C; --glow-blush:rgba(190,112,120,.35); --glow-champagne:rgba(217,181,119,.22); --glow-rose:rgba(190,112,120,.28);
-  --petal:#B9737B; --sparkle:#D9B577;
+  --petal:#B9737B; --sparkle:#D9B577; --tint-1:rgba(190,112,120,.14); --tint-2:rgba(217,181,119,.10);
 }
 *,*::before,*::after{box-sizing:inherit}
 /* Chrome wraps <details> content in ::details-content, which the rule above doesn't reach. Separate rule so older browsers don't drop the one above. */
@@ -165,3 +167,68 @@ footer .sig{font-family:var(--serif);font-style:italic;font-size:30px;color:var(
 
 /* Wedding details load from Firestore; hide the empty text until the first render. */
 body.loading-content .hero-card,body.loading-content main section,body.loading-content footer{visibility:hidden}
+
+/* ---------- Guest sections: same language as the hero ----------
+   Centered headings with the gold divider, content on soft frosted cards with fine gold borders,
+   and a faint glow in the look's colors behind the page. Scoped to #site so the dashboard,
+   which shares this stylesheet, keeps its own layout. */
+#site{--card-bg:color-mix(in srgb,var(--surface) 62%,transparent);--card-line:color-mix(in srgb,var(--gold) 24%,transparent)}
+body:has(#site)::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(ellipse 70% 45% at 0% 25%,var(--tint-1),transparent 70%),
+  radial-gradient(ellipse 70% 45% at 100% 75%,var(--tint-2),transparent 70%)}
+
+#site section.s{border-bottom:0;padding:clamp(56px,10vw,88px) 20px}
+#site section.s h2{text-align:center;margin-bottom:clamp(24px,5vw,36px)}
+#site section.s h2::after,footer .sig::after{content:"✦";display:block;width:200px;margin:14px auto 0;font-family:var(--sans);
+  font-size:13px;line-height:1;color:var(--gold);
+  background:linear-gradient(currentColor,currentColor) left center/72px 1px no-repeat,
+             linear-gradient(currentColor,currentColor) right center/72px 1px no-repeat}
+footer .sig::after{width:160px;margin-top:12px;background-size:56px 1px,56px 1px}
+
+/* The cards */
+#story-body,#site .venue,#site .program,#site .ent>div,#site .attire-card,#rsvp-code,#rsvp-invite,#site .card,#faq-list{
+  background:var(--card-bg);border:1px solid var(--card-line);border-radius:18px;padding:clamp(20px,5vw,32px);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  box-shadow:0 10px 30px color-mix(in srgb,var(--ink) 6%,transparent)}
+
+/* Our story */
+#story-body p{margin-inline:auto}
+#story-body p:last-child{margin-bottom:0}
+
+/* When and where: centered venue cards, map link as a pill */
+#site .venue{text-align:center}
+#site .venue p{margin-inline:auto}
+#site .venue .time{color:var(--gold);font-weight:500}
+#site .venue a{display:inline-block;margin-top:4px;padding:9px 18px;border-radius:999px;border:1px solid var(--card-line);
+  text-decoration:none;font-weight:500;color:var(--leaf);background:color-mix(in srgb,var(--surface) 50%,transparent)}
+#site .venue a:hover{border-color:var(--gold)}
+
+/* Program */
+#site .program li{border-bottom-color:var(--card-line)}
+
+/* Entourage: each group its own card */
+#site .ent{gap:20px}
+#site .ent h3{text-align:center;margin-bottom:16px}
+#site .roles{text-align:center}
+
+/* What to wear and gifts */
+#site #attire{text-align:center}
+#site #attire p{margin-inline:auto}
+#site .swatches{justify-content:center}
+#site .attire-card p:last-child{margin-bottom:0}
+#site .attire-card+.attire-card{margin-top:20px}
+
+/* RSVP */
+#site #rsvp{text-align:left}
+#rsvp-intro{text-align:center;margin-inline:auto}
+#rsvp-code .codeform,#rsvp-invite form{max-width:none}
+#site .card h3{text-align:center}
+
+/* FAQ */
+#faq-list{padding-block:8px}
+#faq-list details:last-child{border-bottom:0}
+#faq-list details{border-bottom-color:var(--card-line)}
+
+@media (max-width:520px){
+  #site section.s{padding-inline:16px}
+}

@@ -12,6 +12,7 @@
   --sky:linear-gradient(180deg,#F7D8C3 0%,#F9E6D3 38%,#FBF1E4 62%,#F2EAD8 100%);
   --sun:rgba(255,226,180,.95); --sun-2:rgba(255,214,170,.5);
   --ridge-1:#E8C9AE; --ridge-2:#D9C7B0; --ridge-3:#C9A98A; --ridge-4:#9FAF97; --glint:rgba(255,255,255,.6);
+  --tint-1:rgba(247,216,195,.5); --tint-2:rgba(242,234,216,.6);
 }
 @media (prefers-color-scheme: dark){
   :root[data-look="golden"]:not([data-theme="light"]){
@@ -19,7 +20,7 @@
     --paper:#1D1B2E; --sparkle:#FFFFFF;
     --sky:linear-gradient(180deg,#151A2E 0%,#262441 40%,#4A3550 66%,#7A4D58 84%,#3A2A38 100%);
     --sun:rgba(255,236,210,.35); --sun-2:rgba(255,220,190,.12);
-    --ridge-1:#3B2C3E; --ridge-2:#2A2236; --ridge-3:#3E2F44; --ridge-4:#1E1A2A; --glint:rgba(255,220,190,.25);
+    --ridge-1:#3B2C3E; --ridge-2:#2A2236; --ridge-3:#3E2F44; --ridge-4:#1E1A2A; --glint:rgba(255,220,190,.25); --tint-1:rgba(122,77,88,.22); --tint-2:rgba(74,53,80,.25);
   }
 }
 :root[data-look="golden"][data-theme="dark"]{
@@ -27,7 +28,7 @@
   --paper:#1D1B2E; --sparkle:#FFFFFF;
   --sky:linear-gradient(180deg,#151A2E 0%,#262441 40%,#4A3550 66%,#7A4D58 84%,#3A2A38 100%);
   --sun:rgba(255,236,210,.35); --sun-2:rgba(255,220,190,.12);
-  --ridge-1:#3B2C3E; --ridge-2:#2A2236; --ridge-3:#3E2F44; --ridge-4:#1E1A2A; --glint:rgba(255,220,190,.25);
+  --ridge-1:#3B2C3E; --ridge-2:#2A2236; --ridge-3:#3E2F44; --ridge-4:#1E1A2A; --glint:rgba(255,220,190,.25); --tint-1:rgba(122,77,88,.22); --tint-2:rgba(74,53,80,.25);
 }
 [data-look="golden"] .petal{display:none}
 [data-look="golden"] .sun,[data-look="golden"] .ridge{display:block}
@@ -52,17 +53,17 @@
 /* ---------- Garden arch ---------- */
 :root[data-look="garden"]{
   --bg:#F5F3EC; --surface:#FFFFFF; --ink:#1E3B30; --muted:#5C6B62; --line:#D5D9CF; --gold:#9C7A43; --leaf:#4F6F5B;
-  --paper:#F5F3EC; --glow-center:#FFFDF8; --glow-sage:#E3EADF; --leaf-fill:rgba(79,111,91,.6); --bloom:#FFFFFF;
+  --paper:#F5F3EC; --glow-center:#FFFDF8; --glow-sage:#E3EADF; --leaf-fill:rgba(79,111,91,.6); --bloom:#FFFFFF; --tint-1:rgba(227,234,223,.8); --tint-2:rgba(255,253,248,.7);
 }
 @media (prefers-color-scheme: dark){
   :root[data-look="garden"]:not([data-theme="light"]){
     --bg:#142019; --surface:#1A2A21; --ink:#EEF0EA; --muted:#AEBBB2; --line:#2E3B34; --gold:#D4B47A; --leaf:#8FB09A;
-    --paper:#142019; --glow-center:rgba(220,230,215,.12); --glow-sage:rgba(79,111,91,.4); --leaf-fill:rgba(143,176,154,.55); --bloom:#E9E6DA;
+    --paper:#142019; --glow-center:rgba(220,230,215,.12); --glow-sage:rgba(79,111,91,.4); --leaf-fill:rgba(143,176,154,.55); --bloom:#E9E6DA; --tint-1:rgba(79,111,91,.22); --tint-2:rgba(220,230,215,.06);
   }
 }
 :root[data-look="garden"][data-theme="dark"]{
   --bg:#142019; --surface:#1A2A21; --ink:#EEF0EA; --muted:#AEBBB2; --line:#2E3B34; --gold:#D4B47A; --leaf:#8FB09A;
-  --paper:#142019; --glow-center:rgba(220,230,215,.12); --glow-sage:rgba(79,111,91,.4); --leaf-fill:rgba(143,176,154,.55); --bloom:#E9E6DA;
+  --paper:#142019; --glow-center:rgba(220,230,215,.12); --glow-sage:rgba(79,111,91,.4); --leaf-fill:rgba(143,176,154,.55); --bloom:#E9E6DA; --tint-1:rgba(79,111,91,.22); --tint-2:rgba(220,230,215,.06);
 }
 [data-look="garden"] .petal,[data-look="garden"] .sparkle{display:none}
 [data-look="garden"] .blooms,[data-look="garden"] .door-arch{display:block}
