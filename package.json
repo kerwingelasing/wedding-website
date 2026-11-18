@@ -17,8 +17,12 @@
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^6.0.0",
+    "@fontsource/bodoni-moda": "^5.3.0",
+    "@fontsource/figtree": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
     "firebase-admin": "^14.5.0",
     "firebase-tools": "^15.33.0",
+    "satori": "^0.63.2",
     "vite": "^8.3.4",
     "vitest": "^5.0.4"
   },

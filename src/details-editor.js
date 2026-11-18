@@ -217,7 +217,7 @@ async function save(e) {
     await setDoc(doc(db, 'config', 'content'), { ...c, updatedAt: serverTimestamp() });
     setDirty(false);
     toast(previewChanged
-      ? 'Saved. Guests see it now; shared-link previews update after the next deploy.'
+      ? 'Saved. Guests see it now; the shared-link preview and image update after the next deploy.'
       : 'Wedding details saved. Guests see them now.');
   } catch (ex) {
     $('d-err').textContent = friendlyError(ex);

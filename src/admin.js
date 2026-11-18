@@ -594,7 +594,7 @@ $('lookForm').addEventListener('submit', async (e) => {
   $('lookSave').disabled = true;
   try {
     await updateDoc(doc(db, 'config', 'site'), { theme: id });
-    toast(`The site now uses ${LOOKS.find((l) => l.id === id).name}.`);
+    toast(`The site now uses ${LOOKS.find((l) => l.id === id).name}. The shared-link image updates after the next deploy.`);
   } catch (ex) {
     toast(friendlyError(ex));
   } finally {
